@@ -129,7 +129,7 @@ export default function EmployerCompanyDetail() {
       {/* Header */}
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-1.5 flex items-center justify-between">
-          <NavLink to="/" className="text-2xl font-bold custom-blue-text">
+          <NavLink to="/" className="text-2xl font-bold text-darkblue">
             <img src={logo} alt="JobSeeker Logo" className="h-13 object-contain" />
           </NavLink>
 

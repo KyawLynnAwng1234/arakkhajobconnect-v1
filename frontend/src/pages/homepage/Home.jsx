@@ -44,7 +44,7 @@ export default function Home() {
         <div className="py-4 max-[483px]:pt-10 text-start">
           <button
             onClick={() => navigateCompany("/companies")}
-            className="px-2 py-1 border rounded-md cursor-pointer transition custom-blue-text custom-blue-border hover-blue hover:bg-gray-200"
+            className="px-2 py-1 border rounded-md cursor-pointer transition text-darkblue border-darkblue hover:text-darkblue-hover hover:bg-graywhite"
           >
             View All 🡆
           </button>
@@ -64,7 +64,7 @@ export default function Home() {
           <div className="py-4 text-start">
             <button
               onClick={() => navigateJobs("/job-search/all")}
-              className="px-2 py-1 border rounded-md cursor-pointer transition custom-blue-text custom-blue-border hover-blue hover:bg-gray-200"
+              className="px-2 py-1 border rounded-md cursor-pointer transition text-darkblue border-darkblue hover:text-darkblue-hover hover:bg-graywhite"
             >
               View All 🡆
             </button>

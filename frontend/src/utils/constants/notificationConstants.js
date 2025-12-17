@@ -1,11 +1,14 @@
 
+const API_URL = import.meta.env.VITE_API_URL;
+const VITE_NOTIFICATIONS_BASE_URL = "/notifications/notifications/applications/";
+
 export const NOTIFICATION_ENDPOINTS = {
-  LIST: `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_NOTIFICATIONS_BASE_URL}`,
+  LIST: `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}`,
   MARK_READ: (id) =>
-    `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_NOTIFICATIONS_BASE_URL}${id}/mark-read/`,
+    `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}${id}/mark-read/`,
   MARK_UNREAD: (id) =>
-    `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_NOTIFICATIONS_BASE_URL}${id}/mark-unread/`,
+    `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}${id}/mark-unread/`,
   DELETE_ONE: (id) =>
-    `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_NOTIFICATIONS_BASE_URL}delete/${id}/`,
-  DELETE_ALL: `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_NOTIFICATIONS_BASE_URL}all-delete/`,
+    `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}delete/${id}/`,
+  DELETE_ALL: `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}all-delete/`,
 };

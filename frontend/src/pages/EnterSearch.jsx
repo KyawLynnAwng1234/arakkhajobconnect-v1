@@ -97,7 +97,7 @@ function EnterSearch({ collapse }) {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 onKeyDown={handleKeyPress}
-                className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 custom-blue-text bg-white max-md:text-base text-lg w-full placeholder-gray-400 focus:outline-none shadow-sm"
+                className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 text-darkblue bg-white max-md:text-base text-lg w-full placeholder-graycustom focus:outline-none shadow-sm"
               />
             </div>
 
@@ -113,7 +113,7 @@ function EnterSearch({ collapse }) {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 onKeyDown={handleKeyPress}
-                className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 custom-blue-text bg-white max-md:text-base text-lg w-full placeholder-gray-400 focus:outline-none shadow-sm"
+                className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 text-darkblue bg-white max-md:text-base text-lg w-full placeholder-graycustom focus:outline-none shadow-sm"
               />
             </div>
 
@@ -121,7 +121,7 @@ function EnterSearch({ collapse }) {
             <div className="md:col-span-1 flex items-end">
               <button
                 onClick={handleSearch}
-                className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg search-button custom-blue-text font-semibold hover-search-button hover-blue transition shadow-md cursor-pointer"
+                className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg search-button text-darkblue font-semibold hover-search-button hover-blue transition shadow-md cursor-pointer"
               >
                 Search
               </button>

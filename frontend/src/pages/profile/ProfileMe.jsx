@@ -105,22 +105,22 @@ export default function ProfileMe() {
     axios
       .get(`${API_URL}/accounts-jobseeker/education/?profile=${profile.id}`)
       .then((res) => setEducationList(res.data))
-      .catch(() => { });
+      .catch(() => {});
 
     axios
       .get(`${API_URL}/accounts-jobseeker/experience/?profile=${profile.id}`)
       .then((res) => setExperienceList(res.data))
-      .catch(() => { });
+      .catch(() => {});
 
     axios
       .get(`${API_URL}/accounts-jobseeker/language/?profile=${profile.id}`)
       .then((res) => setLanguageList(res.data))
-      .catch(() => { });
+      .catch(() => {});
 
     axios
       .get(`${API_URL}/accounts-jobseeker/skill/?profile=${profile.id}`)
       .then((res) => setSkillList(res.data))
-      .catch(() => { });
+      .catch(() => {});
   }, [profile]);
 
   // -----------------------
@@ -221,119 +221,147 @@ export default function ProfileMe() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* HERO SECTION */}
-      <section className="relative bg-gradient-to-r from-[#002366] to-[#003AB3] text-white py-10 rounded-b-2xl shadow-lg">
-        <div className="container mx-auto px-4 grid md:grid-cols-3 gap-8 items-center">
-          {/* LEFT INFO */}
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold">
+      <section className="relative flex bg-darkblue min-h-[530px] text-white py-8 md:py-12 rounded-b-3xl shadow-xl overflow-hidden">
+        <div className="relative container mx-auto px-4 md:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
+          {/* Left Column — Name + Bio + Contacts */}
+          <div className="space-y-4 md:space-y-5 order-2 md:order-1 text-center md:text-left">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-wide drop-shadow-lg">
               {profile.full_name || "Full Name"}
             </h1>
-            <p className="text-white/70">
+
+            <p className="text-white/90 leading-relaxed text-base sm:text-lg max-w-md mx-auto md:mx-0">
               {profile.bio || "Write something about yourself..."}
             </p>
 
-            <div className="space-y-1 text-white/70">
-              <div className="flex items-center gap-2">
+            {/* Contact Info */}
+            <div className="space-y-2 text-white/90 text-sm sm:text-base">
+              <div className="flex items-center justify-center md:justify-start gap-3">
                 <FaLocationDot />
                 <span>{profile.address || "Your Address"}</span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center md:justify-start gap-3">
                 <CiPhone />
                 <span>{profile.phone || "Your Phone"}</span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center md:justify-start gap-3">
                 <CiMail />
                 <span>{profile.email || "Your Email"}</span>
               </div>
             </div>
-          </div>
 
-          {/* SOCIAL LINKS */}
-          <div className="space-y-1 text-white/70">
-            <div className="flex items-center gap-2">
-              <CiGlobe />
-              <a href={profile.website || "#"}>
-                {profile.website || "Website"}
+            {/* Social Badges */}
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 sm:gap-3 pt-2">
+              <a
+                href={profile.website || "#"}
+                target="_blank"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition"
+              >
+                🌐 Website
+              </a>
+
+              <a
+                href={profile.linkedin || "#"}
+                target="_blank"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition"
+              >
+                💼 LinkedIn
+              </a>
+
+              <a
+                href={profile.github || "#"}
+                target="_blank"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition"
+              >
+                🐙 GitHub
               </a>
             </div>
-
-            <div className="flex items-center gap-2">
-              <FaLinkedin />
-              <a href={profile.linkedin || "#"}>
-                {profile.linkedin || "LinkedIn"}
-              </a>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <FaGithub />
-              <a href={profile.github || "#"}>{profile.github || "GitHub"}</a>
-            </div>
           </div>
 
-          {/* PROFILE PICTURE */}
-          <div className="flex justify-end">
-            <Menu as="div">
-              <Menu.Button>
-                <img
-                  src={
-                    profile.profile_picture
-                      ? `${API_URL}${profile.profile_picture}`
-                      : "/default-avatar.png"
-                  }
-                  className="w-36 h-36 rounded-full border-4 border-white shadow-md cursor-pointer"
-                />
-              </Menu.Button>
+          {/* Profile Picture Section */}
+          <div className="flex justify-center md:justify-end relative order-1 md:order-2 mb-4 md:mb-0">
+            <Menu as="div" className="relative inline-block">
+              {({ open }) => (
+                <>
+                  <Menu.Button className="focus:outline-none">
+                    <div className="relative">
+                      <div className="absolute inset-0 rounded-full bg-white opacity-20 blur-2xl"></div>
 
-              <Menu.Items className="absolute bg-white border shadow rounded mt-2 right-0">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() =>
-                        document.getElementById("uploadInput").click()
-                      }
-                      className={`w-full px-4 py-2 text-left ${active ? "bg-blue-50" : ""
-                        }`}
-                    >
-                      Upload
-                    </button>
-                  )}
-                </Menu.Item>
-
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() =>
-                        window.open(
+                      <img
+                        src={
                           profile.profile_picture
-                            ? `${API_URL}${profile.profile_picture}`
-                            : "/default-avatar.png",
-                          "_blank"
-                        )
-                      }
-                      className={`w-full px-4 py-2 text-left ${active ? "bg-blue-50" : ""
+                            ? `${import.meta.env.VITE_API_URL}${
+                                profile.profile_picture
+                              }`
+                            : "/default-avatar.png"
+                        }
+                        alt="Profile"
+                        className={`relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full object-cover border-4 border-white shadow-2xl transition ${
+                          open ? "ring-4 ring-white/50" : ""
                         }`}
-                    >
-                      View
-                    </button>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
+                      />
+                    </div>
+                  </Menu.Button>
 
-              <input
-                id="uploadInput"
-                type="file"
-                className="hidden"
-                onChange={handleUpload}
-              />
+                  <Menu.Items className="absolute left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-0 mt-3 w-40 bg-white rounded-xl shadow-xl z-20">
+                    <div className="py-2">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={() =>
+                              document.getElementById("uploadInput").click()
+                            }
+                            className={`${
+                              active ? "bg-gray-100" : ""
+                            } w-full text-left px-4 py-2 text-gray-700 text-sm`}
+                          >
+                            Upload Photo
+                          </button>
+                        )}
+                      </Menu.Item>
+
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={() =>
+                              window.open(
+                                profile.profile_picture
+                                  ? `${import.meta.env.VITE_API_URL}${
+                                      profile.profile_picture
+                                    }`
+                                  : "/default-avatar.png",
+                                "_blank"
+                              )
+                            }
+                            className={`${
+                              active ? "bg-gray-100" : ""
+                            } w-full text-left px-4 py-2 text-gray-700 text-sm`}
+                          >
+                            View Photo
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </>
+              )}
             </Menu>
+
+            <input
+              type="file"
+              id="uploadInput"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleUpload(e)}
+            />
           </div>
         </div>
 
+        {/* Floating Edit Button */}
         <button
           onClick={() => navigate("/profile/me/edit")}
-          className="absolute top-8 right-8 bg-white text-blue-700 rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-gray-100"
+          className="absolute top-4 right-4 md:top-10 md:right-10 bg-white text-blue-700 rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shadow-lg hover:bg-gray-200 transition"
         >
           ✎
         </button>
@@ -342,12 +370,13 @@ export default function ProfileMe() {
       {/* PROFILE MESSAGE */}
       {profileMessage.text && (
         <div
-          className={`container mx-auto px-4 py-3 mt-4 rounded ${profileMessage.type === "success"
+          className={`container mx-auto px-4 py-3 mt-4 rounded ${
+            profileMessage.type === "success"
               ? "bg-green-100 text-green-700"
               : profileMessage.type === "warning"
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-red-100 text-red-700"
-            }`}
+              ? "bg-yellow-100 text-yellow-700"
+              : "bg-red-100 text-red-700"
+          }`}
         >
           {profileMessage.text}
         </div>
@@ -513,7 +542,9 @@ export default function ProfileMe() {
         editData={editData}
         onSuccess={(edu) => {
           setEducationList((prev) =>
-            editData ? prev.map((e) => (e.id === edu.id ? edu : e)) : [...prev, edu]
+            editData
+              ? prev.map((e) => (e.id === edu.id ? edu : e))
+              : [...prev, edu]
           );
           handleProfileUpdateMessage();
         }}
@@ -527,7 +558,9 @@ export default function ProfileMe() {
         editData={editData}
         onSuccess={(exp) => {
           setExperienceList((prev) =>
-            editData ? prev.map((e) => (e.id === exp.id ? exp : e)) : [...prev, exp]
+            editData
+              ? prev.map((e) => (e.id === exp.id ? exp : e))
+              : [...prev, exp]
           );
           handleProfileUpdateMessage();
         }}
@@ -541,7 +574,9 @@ export default function ProfileMe() {
         editData={editData}
         onSuccess={(lang) => {
           setLanguageList((prev) =>
-            editData ? prev.map((l) => (l.id === lang.id ? lang : l)) : [...prev, lang]
+            editData
+              ? prev.map((l) => (l.id === lang.id ? lang : l))
+              : [...prev, lang]
           );
           handleProfileUpdateMessage();
         }}
@@ -555,7 +590,9 @@ export default function ProfileMe() {
         editData={editData}
         onSuccess={(skill) => {
           setSkillList((prev) =>
-            editData ? prev.map((s) => (s.id === skill.id ? skill : s)) : [...prev, skill]
+            editData
+              ? prev.map((s) => (s.id === skill.id ? skill : s))
+              : [...prev, skill]
           );
           handleProfileUpdateMessage();
         }}
@@ -569,7 +606,9 @@ export default function ProfileMe() {
         editData={editData}
         onSuccess={(resume) => {
           setResumeList((prev) =>
-            editData ? prev.map((r) => (r.id === resume.id ? resume : r)) : [...prev, resume]
+            editData
+              ? prev.map((r) => (r.id === resume.id ? resume : r))
+              : [...prev, resume]
           );
           handleProfileUpdateMessage();
         }}

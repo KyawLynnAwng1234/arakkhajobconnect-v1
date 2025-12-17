@@ -27,11 +27,11 @@ export default function QuickSearchSection() {
   const subOptions = ["Sub Option 1", "Sub Option 2", "Sub Option 3"];
 
   return (
-    <section className="bg-[#f9fafb] border-t py-8">
+    <section className="border-t py-8">
       <div className="container mx-auto px-4">
         {/* Main Title Row */}
         <div className="py-6 text-center">
-          <h2 className="gray-text-custom text-2xl font-bold">Quick Search</h2>
+          <h2 className="text-grayblack text-2xl font-bold">Quick Search</h2>
         </div>
 
         {/* Grid Columns */}
@@ -39,7 +39,7 @@ export default function QuickSearchSection() {
           {quickSearchData.map((col, index) => (
             <div key={index} className="gap-8">
               {/* Heading */}
-              <h4 className="font-semibold whitespace-nowrap gray-text-custom">{col.heading}</h4>
+              <h4 className="font-semibold whitespace-nowrap text-grayblack">{col.heading}</h4>
 
               {/* List Items */}
               <ul className="flex flex-row gap-5 flex-wrap my-4">
@@ -49,7 +49,7 @@ export default function QuickSearchSection() {
                     <li key={i} className="relative">
                       <button
                         onClick={toggleDropdown}
-                        className="custom-blue-text hover-blue hover:underline flex items-center gap-1"
+                        className="text-darkblue hover:text-darkblue-hover hover:underline flex items-center gap-1"
                       >
                         {item}
                         <ChevronDown className="mt-1" size={14} />
@@ -62,7 +62,7 @@ export default function QuickSearchSection() {
                             <li key={index}>
                               <a
                                 href="#"
-                                className="block px-4 py-2 text-sm custom-blue-text hover-blue hover:underline"
+                                className="block px-4 py-2 text-sm text-darkblue hover:text-darkblue-hover hover:underline"
                               >
                                 {option}
                               </a>
@@ -76,7 +76,7 @@ export default function QuickSearchSection() {
                     <li key={i}>
                       <a
                         href="#"
-                        className="custom-blue-text hover-blue hover:underline"
+                        className="text-darkblue hover:text-darkblue-hover hover:underline"
                       >
                         {item}
                       </a>

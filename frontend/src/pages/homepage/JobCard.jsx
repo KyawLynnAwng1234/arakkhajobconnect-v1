@@ -40,26 +40,26 @@ export default function JobCard({ job }) {
   // RENDER 
   return (
     <div
-      className="bg-white py-4 px-6 border border-[#F4F5F7] rounded-3xl shadow-md hover:shadow-lg transition cursor-pointer flex flex-col gap-2"
+      className="bg-white py-4 px-6 border border-graywhite rounded-3xl shadow-md hover:shadow-lg transition cursor-pointer flex flex-col gap-2"
       onClick={() => navigate(`/job-search/${job.id}`)}
     >
       <div className="flex items-start justify-between">
         {/* LEFT — Text Info (title, category name, employer name) */}
         <div className="flex-1 pr-3">
-          <h3 className="font-bold text-xl gray-text-custom">
+          <h3 className="font-bold text-xl text-grayblack">
             {job.title?.length > 15
               ? job.title.substring(0, 15) + "..."
               : job.title}
           </h3>
 
-          <p className="text-sm gray-text-custom mt-1">
+          <p className="text-sm text-grayblack mt-1">
             {job.category_name?.length > 20
               ? job.category_name.substring(0, 20) + "..."
               : job.category_name || "Not specified"}
           </p>
 
           <h5
-            className="font-semibold gray-text-custom mt-1"
+            className="font-semibold text-grayblack mt-1"
             style={{ fontSize: "15px" }}
           >
             {job.employer_business_name?.length > 15
@@ -81,7 +81,7 @@ export default function JobCard({ job }) {
       </div>
 
       {/* Meta Info List with Icons */}
-      <ul className="text-sm mt-1 space-y-1 gray-text-custom">
+      <ul className="text-sm mt-1 space-y-1 text-grayblack">
         {/* Location */}
         <li>
           <span>{getLocationLabel(job.location || "No location")}</span>
@@ -107,7 +107,7 @@ export default function JobCard({ job }) {
       </ul>
 
       <div className="mt-auto flex items-center justify-between pt-3">
-        <p className="text-xs gray-text-custom">
+        <p className="text-xs text-grayblack">
           {getRelativeTime(job.deadline)}
         </p>
 

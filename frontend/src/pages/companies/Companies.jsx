@@ -137,13 +137,13 @@ const Companies = ({ collapse }) => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search company..."
-                  className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 custom-blue-text bg-white max-md:text-base text-lg w-full placeholder-gray-400 focus:outline-none shadow-sm"
+                  className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 text-darkblue bg-white max-md:text-base text-lg w-full placeholder-graycustom focus:outline-none shadow-sm"
                 />
               </div>
               <div className="max-sm:col-span-2 col-span-1 w-full">
                 <button
                   onClick={handleSearch}
-                  className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg search-button custom-blue-text hover-search-button hover-blue text-white font-semibold transition shadow-md cursor-pointer"
+                  className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg search-button text-darkblue hover-search-button hover-blue font-semibold transition shadow-md cursor-pointer"
                 >
                   Search
                 </button>

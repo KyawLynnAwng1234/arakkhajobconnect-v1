@@ -97,7 +97,7 @@ export default function FeaturedCompanies() {
           <div key={i} className="px-3">
             <div
               onClick={() => navigate(`/companies/${company.id}`)}
-              className="border company-border-custom rounded-3xl shadow-md text-center py-4 bg-white flex flex-col gap-[10px] items-center justify-center cursor-pointer"
+              className="border border-graywhite rounded-3xl shadow-md text-center py-4 bg-white flex flex-col gap-[10px] items-center justify-center cursor-pointer"
             >
               <img
                 src={company.logo || "/default-logo.png"}
@@ -119,7 +119,7 @@ export default function FeaturedCompanies() {
                 {company.industry || "No industry info"}
               </p>
 
-              <button className="px-10 py-1.5 border rounded-xl bg-white feacture-company-color cursor-pointer hover:font-medium">
+              <button className="px-10 py-1.5 border rounded-xl  text-darkblue border-darkblue hover:text-darkblue-hover hover:bg-graywhite cursor-pointer hover:font-medium">
                 {company.job_count || 0} jobs
               </button>
             </div>
