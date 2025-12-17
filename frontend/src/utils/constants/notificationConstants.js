@@ -1,5 +1,6 @@
-
-const API_URL = import.meta.env.VITE_API_URL;
+// .env const
+const API_URL = import.meta.env.VITE_API_URL;\
+// noti url
 const VITE_NOTIFICATIONS_BASE_URL = "/notifications/notifications/applications/";
 
 export const NOTIFICATION_ENDPOINTS = {
