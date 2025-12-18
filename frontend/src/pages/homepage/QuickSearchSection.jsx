@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-// Job QuickSearch Loop
+// Static columns
 const quickSearchData = [
-  {
-    heading: "Classifications",
-    items: ["Accounting", "Education & Training", "Government & Defence"],
-  },
   {
     heading: "Major City",
     items: ["Kyaunkpyu", "Myauk U", "Taungup", "Ann"],
@@ -18,71 +14,99 @@ const quickSearchData = [
 ];
 
 export default function QuickSearchSection() {
-  // dropDown true and false
-  const [isOpen, setIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  // 🔐 CSRF helper (INSIDE component)
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
 
-  //   dropDown Data Loop
-  const subOptions = ["Sub Option 1", "Sub Option 2", "Sub Option 3"];
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+
+        const csrftoken = getCookie("csrftoken");
+
+        const res = await axios.get(
+          "http://127.0.0.1:8000/job/job-categories/",
+          {
+            withCredentials: true, // ⭐ session cookie
+            headers: {
+              "X-CSRFToken": csrftoken, // ⭐ csrf token
+            },
+          }
+        );
+
+        setCategories(res.data);
+      } catch (error) {
+        console.error("Failed to load categories", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <section className="border-t py-8">
       <div className="container mx-auto px-4">
-        {/* Main Title Row */}
+        {/* Title */}
         <div className="py-6 text-center">
           <h2 className="text-grayblack text-2xl font-bold">Quick Search</h2>
         </div>
 
-        {/* Grid Columns */}
         <div className="grid md:grid-cols-3 gap-8">
+          {/* Classifications (API) */}
+          <div>
+            <h4 className="font-semibold text-grayblack">Classifications</h4>
+
+            <ul className="flex flex-row gap-5 flex-wrap my-4">
+              {loading && <li className="text-gray-400">Loading...</li>}
+
+              {!loading &&
+                categories.map((category) => (
+                  <li key={category.id}>
+                    <a
+                      href={`/jobs?category=${category.id}`}
+                      className="text-darkblue hover:text-darkblue-hover hover:underline"
+                    >
+                      {category.name}
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </div>
+
+          {/* Static columns */}
           {quickSearchData.map((col, index) => (
-            <div key={index} className="gap-8">
-              {/* Heading */}
-              <h4 className="font-semibold whitespace-nowrap text-grayblack">{col.heading}</h4>
+            <div key={index}>
+              <h4 className="font-semibold text-grayblack">{col.heading}</h4>
 
-              {/* List Items */}
               <ul className="flex flex-row gap-5 flex-wrap my-4">
-                {col.items.map((item, i) =>
-                  item === "Government & Defence" ? (
-                    // Dropdown Item
-                    <li key={i} className="relative">
-                      <button
-                        onClick={toggleDropdown}
-                        className="text-darkblue hover:text-darkblue-hover hover:underline flex items-center gap-1"
-                      >
-                        {item}
-                        <ChevronDown className="mt-1" size={14} />
-                      </button>
-
-                      {/* dropDown data */}
-                      {isOpen && (
-                        <ul className="absolute left-0 top-8 w-40 z-10 bg-white">
-                          {subOptions.map((option, index) => (
-                            <li key={index}>
-                              <a
-                                href="#"
-                                className="block px-4 py-2 text-sm text-darkblue hover:text-darkblue-hover hover:underline"
-                              >
-                                {option}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ) : (
-                    // Normal Item
-                    <li key={i}>
-                      <a
-                        href="#"
-                        className="text-darkblue hover:text-darkblue-hover hover:underline"
-                      >
-                        {item}
-                      </a>
-                    </li>
-                  )
-                )}
+                {col.items.map((item, i) => (
+                  <li key={i}>
+                    <a
+                      href="#"
+                      className="text-darkblue hover:text-darkblue-hover hover:underline"
+                    >
+                      {item}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           ))}

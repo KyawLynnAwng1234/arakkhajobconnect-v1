@@ -192,7 +192,7 @@ export default function JobSearch() {
             <div className="container mx-auto flex justify-end mt-4 mb-8 space-x-2">
               <button
                 onClick={() => navigate("/job-search/all")}
-                className="flex items-center gap-2 px-5 py-2 rounded-md border text-darkblue border-darkblue hover:text-darkblue-hover hover:bg-graywhite"
+                className="px-3 py-2 border rounded-md cursor-pointer transition text-darkblue border-darkblue hover:text-darkblue-hover hover:bg-graywhite duration-300 ease-in-out"
               >
                 See More →
               </button>
