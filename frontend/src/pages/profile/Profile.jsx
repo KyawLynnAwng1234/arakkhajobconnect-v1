@@ -19,7 +19,7 @@ export default function Profile() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#002366] to-[#003AB3] text-white py-8">
+      <section className="bg-darkblue h-[530px] max-2xl:h-[350px] max-xl:h-[320px] max-lg:h-[300px] text-white py-8">
         <div className="container mx-auto px-4 h-[300px]">
           <div className="flex flex-col w-full h-full justify-center items-start">
             <h1 className="text-3xl font-bold mb-2 text-[#ffffffcf]">
@@ -86,7 +86,7 @@ export default function Profile() {
           </p>
           <Link
             to="/employer"
-            className="custom-blue-text custom-blue-border inline-block px-6 py-3 font-semibold border-2 rounded blue-bg-hover hover:text-gray-200 transition duration-500 ease-in-out"
+            className="text-darkblue border-darkblue inline-block px-6 py-3 font-semibold border-2 rounded blue-bg-hover hover:text-gray-200 transition duration-500 ease-in-out"
           >
             Employer Site
           </Link>

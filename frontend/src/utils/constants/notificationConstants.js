@@ -9,5 +9,10 @@ export const NOTIFICATION_ENDPOINTS = {
     `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}${id}/mark-unread/`,
   DELETE_ONE: (id) =>
     `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}delete/${id}/`,
+<<<<<<< HEAD
   DELETE_ALL:`${API_URL}${VITE_NOTIFICATIONS_BASE_URL}all-delete/`,
 };
+=======
+  DELETE_ALL: `${API_URL}${VITE_NOTIFICATIONS_BASE_URL}all-delete/`,
+};
+>>>>>>> 7eda1bc2e1e22033cb11ca6a7f921b7dbc70885a

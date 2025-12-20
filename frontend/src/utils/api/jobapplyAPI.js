@@ -87,7 +87,6 @@ export async function fetchSavedJobs() {
   const token = localStorage.getItem("access");
 
   const url = `${API_BASE}${SAVE_JOB_LIST_URL}`;
-  console.log("Final API calling:", url);
 
   const res = await axios.get(url, {
     withCredentials: true,

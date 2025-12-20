@@ -148,10 +148,10 @@ export default function JobSearch() {
                     setSelectedJobId(job.id);
                     navigate(`/job-search/${job.id}`);
                   }}
-                  className={`company-bg-custom rounded-lg p-4 shadow-md cursor-pointer transition-all hover:shadow-lg ${
+                  className={`border-graywhite rounded-lg p-4 shadow-md cursor-pointer transition-all hover:shadow-lg ${
                     selectedJobId === job.id
-                      ? "active-job-color shadow-lg"
-                      : "bg-white"
+                      ? "bg-grayactive shadow-lg"
+                      : "bg-gray-50"
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -161,7 +161,7 @@ export default function JobSearch() {
                           ? job.title.substring(0, 20) + "..."
                           : job.title}
                       </h1>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm">
                         {job.employer_business_name?.length > 20
                           ? job.employer_business_name.substring(0, 20) + "..."
                           : job.employer_business_name || "Unknown Company"}
@@ -169,7 +169,7 @@ export default function JobSearch() {
                       <p className="text-sm mt-1.5">
                         {getLocationLabel(job.location)}
                       </p>
-                      <p className="text-xs text-gray-400 mt-2">
+                      <p className="text-xs opacity-50 mt-2">
                         {job.deadline
                           ? `Deadline: ${job.deadline}`
                           : "No deadline"}
@@ -186,13 +186,13 @@ export default function JobSearch() {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500 text-center">No jobs available</p>
+              <p className="text-center">No jobs available</p>
             )}
 
             <div className="container mx-auto flex justify-end mt-4 mb-8 space-x-2">
               <button
                 onClick={() => navigate("/job-search/all")}
-                className="flex items-center gap-2 px-5 py-2 rounded-md border border-gray-400 text-gray-700 hover:bg-gray-100"
+                className="px-3 py-2 border rounded-md cursor-pointer transition text-darkblue border-darkblue hover:text-darkblue-hover hover:bg-graywhite duration-300 ease-in-out"
               >
                 See More →
               </button>

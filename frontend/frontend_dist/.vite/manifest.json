@@ -1,11 +1,15 @@
 {
   "index.html": {
+<<<<<<< HEAD
     "file": "assets/index-kfzuc1Oq.js",
+=======
+    "file": "assets/index-C5lLsoTK.js",
+>>>>>>> 7eda1bc2e1e22033cb11ca6a7f921b7dbc70885a
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
-      "assets/index-C1y0y3zk.css"
+      "assets/index-sl6EFEXs.css"
     ],
     "assets": [
       "assets/logo-BYZ73V04.png",

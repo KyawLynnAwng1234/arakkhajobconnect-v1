@@ -69,14 +69,13 @@ export default function EditProfile({
 
   // Handle input changes
   const handleChange = (e) => {
-  const { name, value, files } = e.target;
-  if (files && files.length > 0) {
-    setProfile({ ...profile, [name]: files[0] }); // Real File
-  } else {
-    setProfile({ ...profile, [name]: value }); // Text field
-  }
-};
-
+    const { name, value, files } = e.target;
+    if (files && files.length > 0) {
+      setProfile({ ...profile, [name]: files[0] }); // Real File
+    } else {
+      setProfile({ ...profile, [name]: value }); // Text field
+    }
+  };
 
   // Handle form submit
   const handleSubmit = async (e) => {
@@ -100,7 +99,6 @@ export default function EditProfile({
         formData.append(key, value);
       }
     });
-
 
     const csrftoken = getCookie("csrftoken");
 
@@ -190,13 +188,23 @@ export default function EditProfile({
         {/* Bio */}
         <div>
           <label className="block mb-1 font-semibold">Bio</label>
+
           <textarea
             name="bio"
-            value={profile.bio || ""}
-            onChange={handleChange}
+            value={profile.bio?.slice(0, 100) || ""} 
+            onChange={(e) => {
+              if (e.target.value.length <= 100) {
+                handleChange(e);
+              }
+            }}
+            maxLength={100}
             className="w-full border px-3 py-2 rounded"
             rows="4"
           />
+
+          <p className="text-right text-xs text-gray-500">
+            {(profile.bio || "").length}/100
+          </p>
         </div>
 
         {/* Profile Picture */}
