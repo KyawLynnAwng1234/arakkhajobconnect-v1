@@ -80,7 +80,7 @@ const JobSearchAll = () => {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Scroll to top when location state changes (e.g., navigation)
+  // Scroll to top location state
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.state]);
@@ -103,39 +103,46 @@ const JobSearchAll = () => {
         setLoading(false);
       } catch (err) {
         console.error("Error fetching jobs:", err);
+      } finally {
         setLoading(false);
       }
     };
     fetchAllJobs();
-  }, []);
+  }, [API_URL]);
 
-  // Update jobs when search results or all jobs change
+  // Search + Category FILTER LOGIC
   useEffect(() => {
-    if (location.state?.jobs) {
-      setJobs(location.state.jobs);
-      setIsSearching(true);
-      setCurrentPage(1);
-    } else if (!isSearching) {
-      setJobs(allJobs);
-      setIsSearching(false);
-    }
-  }, [location.state, allJobs]);
+    let baseJobs = allJobs;
+    let searching = false;
 
-  // Merge search result jobs with full job detail
-  useEffect(() => {
+    //Search results from EnterSearch
     if (location.state?.jobs) {
-      const merged = location.state.jobs.map((sJob) => {
+      baseJobs = location.state.jobs.map((sJob) => {
         const full = allJobs.find((j) => j.id === sJob.id) || {};
         return { ...full, ...sJob };
       });
-
-      setJobs(merged);
-      setIsSearching(true);
-      setCurrentPage(1);
-    } else if (!isSearching) {
-      setJobs(allJobs);
-      setIsSearching(false);
+      searching = true;
     }
+
+    // Category filter from QuickSearchSection
+    if (location.state?.categoryId) {
+      baseJobs = baseJobs.filter(
+        (job) => job.category === location.state.categoryId
+      );
+      searching = true;
+    }
+
+    // city filter from QuickSearchSection
+    if (location.state?.location) {
+      baseJobs = baseJobs.filter(
+        (job) => job.location === location.state.location
+      );
+      searching = true;
+    }
+
+    setJobs(baseJobs);
+    setIsSearching(searching);
+    setCurrentPage(1);
   }, [location.state, allJobs]);
 
   // Pagination logic
@@ -151,7 +158,13 @@ const JobSearchAll = () => {
       <div className="container mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-grayblack">
-            {isSearching ? "Search Results" : "All Available Jobs"}
+            {location.state?.categoryName
+              ? `Category: ${location.state.categoryName}`
+              : location.state?.locationName
+              ? `City: ${location.state.locationName}`
+              : isSearching
+              ? "Search Results"
+              : "All Available Jobs"}
           </h2>
           <div className="flex space-x-2">
             <button className="bg-graywhite text-grayblack opacity-80 px-4 py-2 rounded-full text-sm">
@@ -164,9 +177,9 @@ const JobSearchAll = () => {
                   setIsSearching(false);
                   navigate("/job-search/all", { replace: true });
                 }}
-                className="bg-red-500 text-white px-4 py-2 rounded-full text-sm hover:bg-red-600 cursor-pointer"
+                className="bg-red-500 text-white px-4 py-2 rounded-full text-sm hover:bg-red-600"
               >
-                Clear Search
+                Clear Filter
               </button>
             )}
           </div>
@@ -178,15 +191,13 @@ const JobSearchAll = () => {
         ) : currentJobs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
             {currentJobs.map((job) => (
-              <JobCard
-                key={job.id}
-                job={job}
-                onClick={() => navigate(`/job-search/${job.id}`)}
-              />
+              <JobCard key={job.id} job={job} />
             ))}
           </div>
         ) : (
-          <p className="text-center text-grayblack opacity-60">No jobs found.</p>
+          <p className="text-center text-grayblack opacity-60">
+            No jobs found.
+          </p>
         )}
 
         {/* Pagination */}
@@ -198,7 +209,10 @@ const JobSearchAll = () => {
                 disabled={currentPage === 1}
                 className="p-2 rounded-md hover:bg-graywhite disabled:opacity-50"
               >
-                <HiOutlineChevronLeft size={20} className="text-grayblack opacity-80" />
+                <HiOutlineChevronLeft
+                  size={20}
+                  className="text-grayblack opacity-80"
+                />
               </button>
 
               {[...Array(totalPages)].map((_, i) => (
@@ -222,7 +236,10 @@ const JobSearchAll = () => {
                 disabled={currentPage === totalPages}
                 className="p-2 rounded-md hover:bg-graywhite disabled:opacity-50"
               >
-                <HiOutlineChevronRight size={20} className="text-grayblack opacity-80" />
+                <HiOutlineChevronRight
+                  size={20}
+                  className="text-grayblack opacity-80"
+                />
               </button>
             </nav>
           </div>

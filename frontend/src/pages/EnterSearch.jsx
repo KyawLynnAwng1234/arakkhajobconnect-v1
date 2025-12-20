@@ -56,7 +56,6 @@ function EnterSearch({ collapse }) {
       });
 
       const jobs = res.data?.results || [];
-      toast.success(`Found ${res.data.count || 0} job(s)!`, { icon: null });
 
       // navigate and pass results to JobSearchAll.jsx
       navigate("/job-search/all", { state: { jobs } });

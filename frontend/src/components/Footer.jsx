@@ -7,18 +7,18 @@ export default function Footer() {
   const footerLinks = [
     {
       title: "Jobseeker",
-      links: ["Login", "Register", "Jobs Search", "Saved Jobs"],
-      path: ["/login", "/register", "/jobs-search", "/saved-jobs"],
+      links: ["Login", "Jobs Search", "Saved Jobs", "Job Application"],
+      path: ["/sign-in", "/job-search", "/job-search/saved", "/job-search/applications"],
     },
     {
       title: "Employer",
-      links: ["Employer Account", "Post a Job", "Product & Prices"],
-      path: ["/employer-account", "/post-job", "/product-prices"],
+      links: ["Employer SingIn", "Employer Register", "Post a Job", "Product & Prices"],
+      path: ["/employer/sign-in", "/employer/register", "/post-job", "/product-prices"],
     },
     {
       title: "About My Jobs",
-      links: ["Overview", "About Us", "Contact My Jobs", "Privacy Policy"],
-      path: ["/overview", "/about-us", "/contact", "/privacy-policy"],
+      links: ["Overview", "About Us", "Contact My Jobs"],
+      path: ["/overview", "/about-us", "/contact"],
     },
     {
       title: "Contact",
