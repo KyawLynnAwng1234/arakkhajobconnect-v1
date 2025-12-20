@@ -8,7 +8,6 @@ import QuickSearchSection from "../homepage/QuickSearchSection";
 import usePageTitle from "../../hooks/usePageTitle";
 
 const Companies = ({ collapse }) => {
-
   usePageTitle("Companies");
 
   const [companies, setCompanies] = useState([]);
@@ -137,13 +136,13 @@ const Companies = ({ collapse }) => {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search company..."
-                  className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 custom-blue-text bg-white max-md:text-base text-lg w-full placeholder-gray-400 focus:outline-none shadow-sm"
+                  className="p-4 max-md:h-[40px] max-xl:h-[48px] h-[55px] rounded-xl border border-gray-300 text-darkblue bg-white max-md:text-base text-lg w-full placeholder-graycustom focus:outline-none shadow-sm"
                 />
               </div>
               <div className="max-sm:col-span-2 col-span-1 w-full">
                 <button
                   onClick={handleSearch}
-                  className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg search-button custom-blue-text hover-search-button hover-blue text-white font-semibold transition shadow-md cursor-pointer"
+                  className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg search-button text-darkblue hover-search-button hover-blue font-semibold transition shadow-md cursor-pointer"
                 >
                   Search
                 </button>
@@ -219,7 +218,7 @@ const Companies = ({ collapse }) => {
             {currentCompanies.map((company) => (
               <div
                 key={company.id}
-                className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 p-6 cursor-pointer flex flex-col items-center"
+                className="bg-white border border-graywhite rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 ease-in-out p-6 cursor-pointer flex flex-col items-center group"
               >
                 <Link
                   to={`/companies/${company.id}`}
@@ -237,14 +236,14 @@ const Companies = ({ collapse }) => {
                   </div>
 
                   {/* Business Name */}
-                  <h3 className="text-sm gray-text-custom my-2 flex items-center">
+                  <h3 className="text-sm text-grayblack my-2 flex items-center">
                     {company.business_name.length > 12
                       ? company.business_name.substring(0, 12) + "..."
                       : company.business_name || "Not specified"}
                   </h3>
 
                   {/* Description */}
-                  <p className="text-sm text-gray-500 text-center line-clamp-2 mb-4">
+                  <p className="text-sm text-center line-clamp-2 mb-4">
                     {" "}
                     {company.description ? (
                       <div
@@ -258,7 +257,7 @@ const Companies = ({ collapse }) => {
                         }}
                       />
                     ) : (
-                      <p className="text-gray-500 italic">
+                      <p className="italic">
                         {" "}
                         No description provided.{" "}
                       </p>
@@ -267,7 +266,7 @@ const Companies = ({ collapse }) => {
 
                   {/* Job Count Button */}
                   <div className="mt-auto pt-3">
-                    <button className="px-5 py-2 border rounded-xl bg-white border-[#1A82DE] text-[#1A82DEEB] font-medium cursor-pointer hover:font-bold">
+                    <button className="px-5 py-2 border rounded-xl text-darkblue border-darkblue hover:text-darkblue-hover group-hover:bg-graywhite duration-300 ease-in-out font-medium cursor-pointer">
                       {company.job_count || "0"} jobs
                     </button>
                   </div>

@@ -29,7 +29,7 @@ export default function Navbar() {
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-1.5 flex items-center justify-between">
           {/* Logo */}
-          <NavLink to="/" className="text-2xl font-bold custom-blue-text">
+          <NavLink to="/" className="text-2xl font-bold text-darkblue">
             <img
               src={logo}
               alt="JobSeeker Logo"
@@ -45,7 +45,7 @@ export default function Navbar() {
                 to={link.path}
                 className={({ isActive }) =>
                   isActive
-                    ? "custom-blue-text border-b-2 font-semibold"
+                    ? "text-darkblue border-b-2 font-semibold"
                     : "gray-text-custom nav-hover-blue"
                 }
               >
@@ -63,8 +63,8 @@ export default function Navbar() {
                   to="/sign-in"
                   className={({ isActive }) =>
                     isActive
-                      ? "custom-blue-text border-b-2 font-semibold"
-                      : "custom-blue-text border rounded-md py-[2px] px-2 hover-blue"
+                      ? "text-darkblue border-b-2 font-semibold"
+                      : "text-darkblue border rounded-md py-[2px] px-2 hover-blue"
                   }
                 >
                   Sign In
@@ -73,8 +73,8 @@ export default function Navbar() {
                   to="/employer/sign-in"
                   className={({ isActive }) =>
                     isActive
-                      ? "custom-blue-text border-b-2 font-semibold"
-                      : "custom-blue-text hover-blue"
+                      ? "text-darkblue border-b-2 font-semibold"
+                      : "text-darkblue hover-blue"
                   }
                 >
                   Employer SignUp
@@ -86,7 +86,7 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="custom-blue-text font-semibold flex items-center gap-1 focus:outline-none"
+                    className="text-darkblue font-semibold flex items-center gap-1 focus:outline-none"
                   >
                     {loading
                       ? "Loading..."
@@ -142,7 +142,7 @@ export default function Navbar() {
                   to="/employer/sign-in"
                   className={({ isActive }) =>
                     isActive
-                      ? "custom-blue-text border-b-2 blue-border-color font-semibold"
+                      ? "text-darkblue border-b-2 blue-border-color font-semibold"
                       : "gray-text-custom nav-hover-blue"
                   }
                 >
@@ -174,7 +174,7 @@ export default function Navbar() {
                       to={link.path}
                       className={({ isActive }) =>
                         isActive
-                          ? "block custom-blue-text font-semibold"
+                          ? "block text-darkblue font-semibold"
                           : "block gray-text-custom nav-hover-blue"
                       }
                       onClick={() => setIsOpen(false)}
@@ -191,7 +191,7 @@ export default function Navbar() {
                     <li>
                       <NavLink
                         to="/sign-in"
-                        className="custom-blue-text border rounded-md py-[4px] px-1 hover-blue"
+                        className="text-darkblue border rounded-md py-[4px] px-1 hover-blue"
                         onClick={() => setIsOpen(false)}
                       >
                         Sign In
@@ -200,7 +200,7 @@ export default function Navbar() {
                     <li>
                       <NavLink
                         to="/employer/sign-in"
-                        className="block custom-blue-text hover-blue"
+                        className="block text-darkblue hover-blue"
                         onClick={() => setIsOpen(false)}
                       >
                         Employer Site
@@ -211,7 +211,7 @@ export default function Navbar() {
                   <>
                     <li>
                       <span
-                        className="block custom-blue-text font-semibold cursor-pointer"
+                        className="block text-darkblue font-semibold cursor-pointer"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
                         {loading
@@ -267,7 +267,7 @@ export default function Navbar() {
                         to="/employer/sign-in"
                         className={({ isActive }) =>
                           isActive
-                            ? "block custom-blue-text font-semibold"
+                            ? "block text-darkblue font-semibold"
                             : "block gray-text-custom nav-hover-blue"
                         }
                         onClick={() => setIsOpen(false)}

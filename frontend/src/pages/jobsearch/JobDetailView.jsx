@@ -322,14 +322,14 @@ export default function JobDetailView({ job, onToggleMaximize }) {
         <button
           onClick={handleOpenModal}
           disabled={!job?.is_active || isApplying || isApplied}
-          className={`px-6 py-2 rounded-md text-white font-semibold transition-colors duration-200 cursor-pointer ${
+          className={`px-6 py-2 rounded-md text-white font-semibold transition-colors duration-200 ${
             isApplied
               ? "bg-green-600 cursor-not-allowed opacity-70"
               : isApplying
               ? "bg-blue-400 cursor-wait"
               : job?.is_active
               ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-              : "bg-gray-400 cursor-not-allowed opacity-70"
+              : "bg-green-400 cursor-not-allowed opacity-70"
           }`}
         >
           {isApplied ? "✅ Applied" : isApplying ? "Applying..." : "Apply Now"}
