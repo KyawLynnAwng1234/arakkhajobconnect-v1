@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Device Test</title>
+  <meta charset="utf-8">
+</head>
+<body style="font-family: sans-serif; padding: 40px;">
+
+  <h2>Device Information</h2>
+
+  <ul>
+    <li><b>Device:</b> {{ device_label }}</li>
+    <li><b>OS:</b> {{ os }}</li>
+    <li><b>Browser:</b> {{ browser }}</li>
+    <li><b>IP:</b> {{ ip }}</li>
+    <li><b>Fingerprint:</b> {{ fingerprint }}</li>
+  </ul>
+
+  <hr>
+
+  <p style="color: #666;">
+    Raw UA:<br>
+    {{ raw_user_agent }}
+  </p>
+
+</body>
+</html>

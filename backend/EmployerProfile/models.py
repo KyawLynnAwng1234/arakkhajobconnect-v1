@@ -1,6 +1,9 @@
 from django.db import models
 from Accounts.models import CustomUser
 import uuid
+from django.utils import timezone
+from datetime import timedelta
+from django.conf import settings
 
 class EmployerProfile(models.Model):
 
@@ -36,4 +39,16 @@ class EmployerProfile(models.Model):
     
     def __str__(self):
         return self.business_name
+    
+
+class EmployerEmailVerification(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="employer_email_verification",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_expired(self):
+        return timezone.now() > self.created_at + timedelta(minutes=1)
 

@@ -17,3 +17,9 @@ http://127.0.0.1:8000/job/jobs/delete/<uuid:pk>/
 #searh
 http://127.0.0.1:8000/job/search/?q=WebDevelopment&loc=Mrauk%20Oo
 
+#classifications 
+http://127.0.0.1:8000/job/quick-search-category/
+
+#quick search
+http://127.0.0.1:8000/job/quick-search-city/
+

@@ -1,4 +1,5 @@
 # Accounts/models.py
+from django.conf import settings
 from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -49,5 +50,33 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+    
+class LoginDevice(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="login_devices",
+    )
+
+    device_name = models.CharField(max_length=255, blank=True, default="")
+    os = models.CharField(max_length=100, blank=True, default="")
+    browser = models.CharField(max_length=100, blank=True, default="")
+
+    is_verified = models.BooleanField(default=False) 
+    verified_at = models.DateTimeField(null=True, blank=True)
+
+    user_agent = models.TextField(blank=True, default="")
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+
+    fingerprint = models.CharField(max_length=64)  # sha256
+    last_login = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "fingerprint")
+        ordering = ["-last_login"]
+
+    def __str__(self):
+        return f"{self.user} - {self.device_name} - {self.browser}"
 
 

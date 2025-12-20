@@ -9,8 +9,8 @@ urlpatterns = [
     path('employer/login/',views.login_employer,name="employer-loginpage"),
     path('employer/logout/',views.logout_employer,name="employer-logoutpage"),
     path('employer/emailverify/<uidb64>/<token>/',views.emailverify_employer,name="employer-emailverifypage"),
-    path('employer/resend-verification-email/',views.resend_verification,name="employer-resend-verification-emailpage"),
-    path("employer/resend-verification-email-ui/",views.resend_verification_api,name="employer_resend_verification_ui_page"),
+    path('employer/resend-verification-email/',views.resend_verification_api,name="employer-resend-verification-emailpage"),
+    path("employer/resend-verification-email-ui/",views.resend_verification,name="employer_resend_verification_ui_page"),
 
 
     #employer dashboard paths

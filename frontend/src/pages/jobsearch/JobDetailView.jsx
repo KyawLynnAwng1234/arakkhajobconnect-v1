@@ -190,10 +190,6 @@ export default function JobDetailView({ job, onToggleMaximize }) {
 
     const missingProfileData =
       !profile?.id ||
-      skillList.length === 0 ||
-      languageList.length === 0 ||
-      educationList.length === 0 ||
-      experienceList.length === 0 ||
       resumeList.length === 0;
 
     if (missingProfileData) {

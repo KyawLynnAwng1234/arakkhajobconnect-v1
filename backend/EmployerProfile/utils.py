@@ -6,11 +6,14 @@ from django.urls import reverse
 from django.template.loader import render_to_string
 from django.conf import settings
 import datetime
+from .models import EmployerEmailVerification
 
 
 def send_verification_email(request, user):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = default_token_generator.make_token(user)
+
+    EmployerEmailVerification.objects.update_or_create(user=user)
 
     verify_url = request.build_absolute_uri(
         reverse("employer-emailverifypage",
@@ -39,7 +42,7 @@ def send_verification_email(request, user):
         msg = EmailMultiAlternatives(
             subject=subject,
             body=text_content,
-            from_email=settings.DEFAULT_FROM_EMAIL,  # ✅ FIXED
+            from_email=settings.DEFAULT_FROM_EMAIL,
             to=[user.email],
         )
         msg.attach_alternative(html_content, "text/html")

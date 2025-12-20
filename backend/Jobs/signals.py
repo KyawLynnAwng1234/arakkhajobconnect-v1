@@ -7,7 +7,7 @@ from .models import Jobs
 from Application.models import Application
 from Notification.models import Notification  # adjust if your app name is different
 
-# -------- Job created -> notify employer --------
+# Job created -> notify employer
 @receiver(post_save, sender=Jobs)
 def notify_on_job_created(sender, instance, created, **kwargs):
     if not created:
@@ -23,7 +23,7 @@ def notify_on_job_created(sender, instance, created, **kwargs):
         object_id=instance.id,
     ))
 
-# -------- Application created -> notify employer --------
+#Application created -> notify employer
 @receiver(post_save, sender=Application)
 def notify_on_application_created(sender, instance, created, **kwargs):
     if not created:
@@ -38,7 +38,7 @@ def notify_on_application_created(sender, instance, created, **kwargs):
     ))
 
 
-# -------- Track old status before save (for status-change detection) --------
+#Track old status before save (for status-change detection)
 @receiver(pre_save, sender=Application)
 def cache_old_status(sender, instance, **kwargs):
     if not instance.pk:
@@ -49,5 +49,4 @@ def cache_old_status(sender, instance, **kwargs):
         instance._old_status = getattr(old, "status", None)
     except Application.DoesNotExist:
         instance._old_status = None
-        
-# -------- Application status changed -> notify jobseeker --------
+

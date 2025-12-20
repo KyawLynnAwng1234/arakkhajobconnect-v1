@@ -25,7 +25,13 @@ from Jobs.models import Jobs
 from Application.models import Application
 from .models import EmployerProfile
 from django.db.models import Count
+from .models import EmployerEmailVerification
+from django.views.decorators.http import require_POST
 User = get_user_model()
+from Accounts.services.device_service import record_login_device
+from Accounts.emails.device_alert import send_new_device_email
+
+
 
 # Pre-register employer (collect email & password)
 @api_view(['POST'])
@@ -34,20 +40,15 @@ def preregister_employer(request):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-
         if User.objects.filter(email=email).exists():
-            return Response(
-                {
+            return Response({
                     "error": "This email is already registered.",
                     "code": "EMAIL_EXISTS",
                 },
                 status=400
             )
-
-        # Save temporarily in session (like original code)
         request.session['user_email'] = email
         request.session['user_password'] = password
-        # Instead of redirect, return JSON response
         return Response(
             {
                 "message": "Pre-registration successful",
@@ -65,7 +66,6 @@ def preregister_employer(request):
 @parser_classes([MultiPartParser, FormParser])
 def register_employer(request, role):
     data = request.data.copy()
-    # --- Parse profile JSON ---
     profile_str = data.get("profile")
     if profile_str:
         try:
@@ -79,16 +79,13 @@ def register_employer(request, role):
         data={"profile": profile_data, "logo": logo_file}
     )
     serializer.is_valid(raise_exception=True)
-    # Fetch from session
     email = request.session.get("user_email")
     raw_password = request.session.get("user_password")
-
     if not email or not raw_password:
         return Response(
             {"error": "Your session has expired. Please start registration again."},
             status=400
         )
-    #Friendly User Exists Check
     if User.objects.filter(email=email).exists():
         return Response(
             {
@@ -97,9 +94,7 @@ def register_employer(request, role):
             },
             status=409
         )
-
     #EmployerProfile Exists Check
-    # (must check via user__email, not contact_email)
     if EmployerProfile.objects.filter(user__email=email).exists():
         return Response(
             {
@@ -108,8 +103,6 @@ def register_employer(request, role):
             },
             status=409
         )
-
-    #Create User safely
     user = User.objects.create(
         email=email,
         role=role,
@@ -118,15 +111,11 @@ def register_employer(request, role):
     )
     user.set_password(raw_password)
     user.save()
-
-    #Create Employer Profile
     profile_data = serializer.validated_data["profile"]
     logo = serializer.validated_data.get("logo")
     employer_profile = EmployerProfile.objects.create(
         user=user, logo=logo, **profile_data
     )
-
-    # Login + send email
     login(request, user)
     send_verification_email(request, user)
     request.session["pending_activation"] = True
@@ -149,25 +138,52 @@ def register_employer(request, role):
 # end register employerprofile
 
 #sign in employer
-@ratelimit(key='ip', rate='5/m', block=False)
 @api_view(["POST"])
 def login_employer(request):
-    if getattr(request, 'limited', False):
-        response = Response(
-            {"detail": "Too many employer login attempts. Please wait one minute."},
-            status=status.HTTP_429_TOO_MANY_REQUESTS
-        )
-        response['Retry-After'] = '60'
-        return response
     email = request.data.get("email")
     password = request.data.get("password")
+
     user = authenticate(request, email=email, password=password)
-    if user is not None:
-        if not user.is_verified:
-            return Response({"detail": "Please verify your email first."}, status=403)
-        login(request, user)
-        return Response({"detail": "Login successful"}, status=200)
-    return Response({"detail": "Invalid credentials"}, status=400)
+
+    if not user:
+        return Response(
+            {"error": "Invalid credentials"},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    if not user.role == "employer":
+        return Response(
+            {"error": "Not an employer account"},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    #LOGIN SUCCESS (session / token)
+    login(request, user)
+
+    #NEW — DEVICE TRACKING (ADD THIS)
+    device, created, info = record_login_device(request, user)
+
+    if created:
+            send_new_device_email(
+                user=user,
+                device=device,
+                ip=device.ip_address
+            )
+
+    # (optional debug)
+    print("EMPLOYER LOGIN DEVICE:")
+    print("  Device:", info["device"])
+    print("  OS:", info["os"])
+    print("  Browser:", info["browser"])
+    print("  NEW DEVICE?", created)
+
+    return Response(
+        {
+            "message": "Login successful",
+            "new_device": created,   # optional (frontend use later)
+        },
+        status=status.HTTP_200_OK
+    )
 
 #end sign in employer
 
@@ -184,51 +200,64 @@ def emailverify_employer(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User.objects.get(pk=uid)
-    except (User.DoesNotExist, ValueError, TypeError, OverflowError):
-        user = None
-    
+    except (User.DoesNotExist, ValueError, TypeError):
+        return render(request, "emails/email_verify_invalid.html")
     if user.is_verified:
         return render(request, "emails/already_verified.html")
+    try:
+        verification = EmployerEmailVerification.objects.get(user=user)
+    except EmployerEmailVerification.DoesNotExist:
+        return render(
+            request,
+            "emails/email_verify_invalid.html",
+            {"email": user.email, "reason": "expired"}
+        )
+    if verification.is_expired():
+        verification.delete()
+        return render(
+            request,
+            "emails/email_verify_invalid.html",
+            {"email": user.email, "reason": "expired"}
+        )
 
-    # VALID TOKEN
-    if user is not None and default_token_generator.check_token(user, token):
-        if not user.is_active:
-            user.is_active = True
-            user.is_verified = True
-            user.save()
+    # Valid token
+    if default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.is_verified = True
+        user.save()
+        verification.delete()
         return redirect("/employer/dashboard")
 
-    # INVALID OR EXPIRED TOKEN → PASS EMAIL INTO TEMPLATE
-    email = user.email if user else ""
-    return render(request, "emails/email_verify_invalid.html", {"email": email})
-#end email verify
+    # Invalid token
+    return render(
+        request,
+        "emails/email_verify_invalid.html",
+        {"email": user.email, "reason": "invalid"}
+    )
 #end email verify
 
 #resend verification email
 @ratelimit(key='ip', rate='2/m', block=False)
-@api_view(["POST"])
-@permission_classes([AllowAny])  # not logged in — fine
+@require_POST
 def resend_verification(request):
-    if getattr(request, 'limited', False):
-        response = Response(
-            {"detail": "Too many resend attempts. Please wait one minute."},
-            status=status.HTTP_429_TOO_MANY_REQUESTS
-        )
-        response['Retry-After'] = '60'
-        return response    
+    # Rate limit hit
+    if getattr(request, "limited", False):
+        return redirect("employer-resend-success")
     email = (request.session.get("user_email") or "").strip()
     if not email:
-        email = (request.data.get("email") or "").strip()
-    if not email:
-        return Response({"detail": "Email required."}, status=status.HTTP_400_BAD_REQUEST)
-    try:
-        user = User.objects.get(email__iexact=email)
-    except User.DoesNotExist:
-        return Response({"detail": "If your account exists, we sent a verification email."}, status=200)
-    if getattr(user, "is_verified", False):
-        return Response({"detail": "Your email is already verified."}, status=200)
-    send_verification_email(request, user)
-    return Response({"detail": "Verification email sent."}, status=200)
+        email = (request.POST.get("email") or "").strip()
+    if email:
+        try:
+            user = User.objects.get(email__iexact=email)
+            if not getattr(user, "is_verified", False):
+                send_verification_email(request, user)
+        except User.DoesNotExist:
+            pass
+    return render(
+        request,
+        "emails/resend_success.html",
+        {"email": email},
+    )
 #end resend email verification link
 
 #resend verification email
@@ -236,7 +265,6 @@ def resend_verification(request):
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def resend_verification_api(request):
-
     if getattr(request, "limited", False):
         response = Response(
             {"detail": "Too many resend attempts. Please wait one minute."},
@@ -244,29 +272,18 @@ def resend_verification_api(request):
         )
         response["Retry-After"] = "60"
         return response
-
-    # Get email from session OR request body
     email = (request.session.get("user_email") or "").strip()
     if not email:
         email = (request.data.get("email") or "").strip()
-
     if not email:
         return Response({"detail": "Email required."}, status=400)
-
-    # Check if user exists
     try:
         user = User.objects.get(email__iexact=email)
     except User.DoesNotExist:
-        # Do not reveal account existence
         return Response({"detail": "If your account exists, we sent a verification email."}, status=200)
-
-    # Already verified
     if getattr(user, "is_verified", False):
         return Response({"detail": "Your email is already verified."}, status=200)
-
-    # SAFE EMAIL SENDING (Anymail exception handled)
     email_sent = send_verification_email(request, user)
-
     if not email_sent:
         return Response(
             {"detail": "Email provider rejected verification email. Try again later."},
@@ -374,68 +391,7 @@ def company_search(request):
     return Response({
         "companies":companies_s
     })
-
-# #job search in employer dashboard
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def job_filter_by_status(request):
-#     user = request.user
-#     status_param = request.GET.get('status', '').lower()
-#     jobs = Jobs.objects.filter(employer__user=user)
-
-#     if status_param == 'active':
-#         jobs = jobs.filter(is_active=True)
-
-#     elif status_param == 'closed':
-#         jobs = jobs.annotate(
-#             current_applicants=Count('applications')
-#         ).filter(current_applicants__gte=F('max_applicants'))
-    
-#     elif status_param == 'expired':
-#         today = timezone.localdate()
-#         jobs = jobs.filter(deadline__lt=today)
-    
-#     else:
-#         return Response({"error": "Invalid status"}, status=400)
-
-#     jobs = jobs.order_by('-created_at')
-#     return Response({
-#         "jobs": JobcompanySerializer(jobs, many=True).data
-#     })
-
-#end job search in employer dashboard
-
-# #application filter by status
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def application_filter_by_status(request):
-#     user = request.user
-#     status_param = request.GET.get('status', '').lower()
-#     applications = Application.objects.filter(job__employer__user=user)
-
-#     if status_param == 'pending':
-#         applications = applications.filter(status='P')
-
-#     elif status_param == 'accepted':
-#         applications = applications.filter(status='H')
-    
-#     elif status_param == 'rejected':
-#         applications = applications.filter(status='RJ')
-    
-#     elif status_param == 'reviewed':
-#         applications = applications.filter(status='R')
-
-#     elif status_param == 'shortlist':
-#         applications = applications.filter(status='SL')
-    
-#     else:
-#         return Response({"error": "Invalid status"}, status=400)
-
-#     applications = applications.order_by('-applied_at')
-#     return Response({
-#         "applications": ApplicationListSerializer(applications, many=True).data
-#     })
-
+#end
 
 
 

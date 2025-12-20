@@ -20,7 +20,6 @@ from .serializers import JobCategorySerializer, JobsSerializer
 from EmployerProfile.models import EmployerProfile
 from django.shortcuts import get_object_or_404
 
-# Create your views here.
 # job category list
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -169,32 +168,22 @@ def jobs_detail(request, pk):
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobs_update(request, pk):
     user = request.user
-
-    # Admin = can edit all, Employer = his own job
     if user.is_staff:
         job = get_object_or_404(Jobs, pk=pk)
     else:
         job = get_object_or_404(Jobs, pk=pk, employer__user=user)
-
-    old_max = job.max_applicants  # keep previous value
-
+    old_max = job.max_applicants
     serializer = JobsSerializer(job, data=request.data, partial=True)
     serializer.is_valid(raise_exception=True)
     updated_job = serializer.save()
 
-    # ------------------------------------------
-    # 🔥 AUTO REACTIVATE JOB IF MAX APPLICANTS INCREASED
-    # ------------------------------------------
+    #AUTO REACTIVATE JOB IF MAX APPLICANTS INCREASED
     total_apps = updated_job.applications.count()
-
-    # If the new max is higher AND job is inactive → reactivate
     if updated_job.max_applicants and total_apps < updated_job.max_applicants:
         if not updated_job.is_active:
             updated_job.is_active = True
             updated_job.save(update_fields=["is_active"])
-
     return Response(JobsSerializer(updated_job).data, status=200)
-
 
 # Job Delete (DELETE)
 @api_view(['DELETE'])
@@ -215,28 +204,17 @@ def search(request):
     q = (request.GET.get("q") or "").strip()
     loc = (request.GET.get("loc") or "").strip()
     today = date.today()
-
-    # Not expired filter
     not_expired = Q(deadline__isnull=True) | Q(deadline__gte=today)
-
-    # Base queryset
     qs = Jobs.objects.filter(is_active=True).filter(not_expired)
-
-    # Ensure employer is joined
     qs = qs.select_related("employer")
-
     normalized_q = q.replace(" ", "")
     normalized_loc = loc.replace(" ", "")
-
-    # Annotate everything we need
     qs = qs.annotate(
         title_nospace=Func(F("title"), Value(" "), Value(""), function="REPLACE", output_field=CharField()),
         location_nospace=Func(F("location"), Value(" "), Value(""), function="REPLACE", output_field=CharField()),
         category_name=F("category__name"),
         category_name_nospace=Func(F("category__name"), Value(" "), Value(""), function="REPLACE", output_field=CharField()),
         description_nospace=Func(F("description"), Value(" "), Value(""), function="REPLACE", output_field=CharField()),
-
-        # ✔️ Annotated employer business name
         employer_business_name=F("employer__business_name"),
     )
 
@@ -267,14 +245,14 @@ def search(request):
         )
     ).order_by("-priority_rank", "-created_at")
 
-    # 🚨 FIXED: Use employer_business_name not employer__business_name
+    #Use employer_business_name not employer__business_name
     data = list(
         qs.values(
             "id",
             "title",
             "location",
             "category_name",
-            "employer_business_name",  # ← THE KEY FIX
+            "employer_business_name",
             "description",
             "deadline",
             "created_at",

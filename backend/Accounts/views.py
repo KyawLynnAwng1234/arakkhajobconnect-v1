@@ -1,11 +1,18 @@
 # common/views.py
+from django.shortcuts import render,redirect
 from django.http import HttpResponse, Http404
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from django.utils import timezone
+from django.contrib.auth import login
+from Accounts.models import LoginDevice
+from Accounts.utils.device_tokens import verify_device_verification_token
 from rest_framework import status
 from django.contrib.auth import update_session_auth_hash
+from Accounts.utils.device import get_client_ip, parse_user_agent, generate_fingerprint
 import hashlib
 User = get_user_model()
 
@@ -35,4 +42,38 @@ def change_password(request):
     user.save()
     update_session_auth_hash(request, user)
     return Response({"success": "Password updated successfully."}, status=200)
+
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def verify_device(request):
+    token = request.GET.get("token")
+
+    fingerprint = verify_device_verification_token(token)
+    if not fingerprint:
+        return render(
+            request,
+            "security/verify_device_invalid.html",
+            status=400
+        )
+
+    device = LoginDevice.objects.filter(fingerprint=fingerprint).select_related("user").first()
+    if not device:
+        return render(
+            request,
+            "security/verify_device_invalid.html",
+            status=404
+        )
+
+    # ✅ Mark device verified
+    device.is_verified = True
+    device.verified_at = timezone.now()
+    device.save(update_fields=["is_verified", "verified_at"])
+
+    # ✅ LOG USER IN (CRITICAL)
+    login(request, device.user)
+
+    # ✅ Redirect to dashboard
+    return redirect("/accounts-employer/employer/dashboard/")
 

@@ -70,6 +70,7 @@ def signin_jobseeker(request, role):
     request.session['email'] = user.email
     request.session['user_id'] = str(user.id)
     request.session['otp_created_at'] = timezone.now().isoformat()
+    request.session.modified = True
     message = (
         "Account created and verification code sent to "
         if created else
@@ -94,41 +95,54 @@ def signin_jobseeker(request, role):
 @api_view(['POST'])
 @ratelimit(key='ip', rate='5/m', block=False, method='POST')
 def otp_verify_jobseeker(request):
-    """
-    Verifies jobseeker email using OTP stored in session.
-    Automatically logs user in after successful verification.
-    """
-
-    # 1. Rate limit check
+    # 1. Rate limit
     if getattr(request, 'limited', False):
         return Response(
             {"detail": "Too many attempts. Try again in 1 minute."},
             status=status.HTTP_429_TOO_MANY_REQUESTS
         )
 
-    # 2. Get OTP and session values
+    # 2. Get input + session
     input_code = str(request.data.get('code', '')).strip()
     session_code = str(request.session.get('verification_code', '')).strip()
     user_id = request.session.get('user_id')
+    created_at = request.session.get('otp_created_at')
 
-    # Debug (optional)
-    print("Submitted:", input_code, "Stored:", session_code, "UserID:", user_id)
-
-    # 3. Check session existence
-    if not session_code or not user_id:
+    # 3. Session existence
+    if not session_code or not user_id or not created_at:
         return Response(
             {"error": "Verification session expired. Please request a new code."},
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # 4. Validate OTP
+    # 4. ⏱ EXPIRY CHECK (2 minutes)
+    try:
+        created_at = timezone.datetime.fromisoformat(created_at)
+        if timezone.now() > created_at + timedelta(minutes=1):
+            # cleanup
+            request.session.pop('verification_code', None)
+            request.session.pop('user_id', None)
+            request.session.pop('otp_created_at', None)
+            request.session.modified = True
+
+            return Response(
+                {"error": "Verification code expired. Please request a new one."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    except Exception:
+        return Response(
+            {"error": "Invalid verification session."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # 5. OTP match
     if input_code != session_code:
         return Response(
             {"error": "Invalid verification code."},
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    # 5. Verify user and activate
+    # 6. Verify user
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
@@ -137,25 +151,23 @@ def otp_verify_jobseeker(request):
             status=status.HTTP_404_NOT_FOUND
         )
 
-    # 6. Mark user as verified
     user.is_verified = True
     user.save(update_fields=['is_verified'])
 
     # 7. Auto login
     login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-    # 8. Cleanup session
+    # 8. Cleanup session (single-use OTP)
     request.session.pop('verification_code', None)
     request.session.pop('user_id', None)
+    request.session.pop('otp_created_at', None)
     request.session.modified = True
 
     return Response(
-        {
-            "message": "Email verified successfully!",
-            "session_key": request.session.session_key,
-        },
+        {"message": "Email verified successfully!"},
         status=status.HTTP_200_OK
     )
+
 
 # end job-seeker-email-verify
 

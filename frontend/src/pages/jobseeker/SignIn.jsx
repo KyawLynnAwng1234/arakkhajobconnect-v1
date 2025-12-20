@@ -165,7 +165,6 @@ const SignIn = () => {
           </button>
         </div>
       </main>
-
       <footer className="h-12 flex items-center justify-center border-t border-gray-200 text-md text-gray-500">
         © 2023 Copyright: Jobstreet .com
       </footer>
