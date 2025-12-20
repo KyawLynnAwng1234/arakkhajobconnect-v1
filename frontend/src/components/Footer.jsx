@@ -12,13 +12,13 @@ export default function Footer() {
     },
     {
       title: "Employer",
-      links: ["Employer SingIn", "Employer Register", "Post a Job", "Product & Prices"],
-      path: ["/employer/sign-in", "/employer/register", "/post-job", "/product-prices"],
+      links: ["Employer SingIn", "Employer Register", "Post a Job"],
+      path: ["/employer/sign-in", "/employer/register", "/post-job"],
     },
     {
       title: "About My Jobs",
-      links: ["Overview", "About Us", "Contact My Jobs"],
-      path: ["/overview", "/about-us", "/contact"],
+      links: ["Overview", "About Us"],
+      path: ["/overview", "/about-us"],
     },
     {
       title: "Contact",
