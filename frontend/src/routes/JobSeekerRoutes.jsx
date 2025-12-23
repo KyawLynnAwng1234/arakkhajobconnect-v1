@@ -19,6 +19,7 @@ import CompanyAbout from "../pages/companies/CompanyAbout";
 import ProfileMe from "../pages/profile/ProfileMe";
 import EditProfile from "../pages/profile/editprofile/EditProfile";
 import ProtectedRoute from "../components/ProtectedRoute";
+import AboutUs from "../components/AboutUs";
 
 export const JobSeekerRoutes = (
   <Route path="/" element={<MainLayout />}>
@@ -60,5 +61,8 @@ export const JobSeekerRoutes = (
         </ProtectedRoute>
       }
     />
+
+      {/* About Us */}
+    <Route path="about-us" element={<AboutUs />} />
   </Route>
 );

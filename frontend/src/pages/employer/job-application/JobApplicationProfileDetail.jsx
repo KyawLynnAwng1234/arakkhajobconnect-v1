@@ -13,6 +13,7 @@ export default function JobApplicationProfileDetail() {
   const [education, setEducation] = useState([]);
   const [experience, setExperience] = useState([]);
   const [skills, setSkills] = useState([]);
+  const [resumes, setResumes] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,6 +22,27 @@ export default function JobApplicationProfileDetail() {
 
   const seekerName = jobseeker?.full_name || "Job Application Profile";
   usePageTitle(`${seekerName} | JobSeeker`);
+
+  // Fetch resumes inside useEffect
+  useEffect(() => {
+    const fetchResumes = async () => {
+      try {
+        console.log(
+          "Fetching resumes from:",
+          `${API_URL}/accounts-jobseeker/resume/`
+        );
+        const res = await axios.get(`${API_URL}/accounts-jobseeker/resume/`, {
+          withCredentials: true,
+        });
+        console.log("Resumes fetched:", res.data);
+        setResumes(res.data);
+      } catch (error) {
+        console.error("❌ Error fetching resumes:", error);
+      }
+    };
+
+    fetchResumes();
+  }, []);
 
   // Fetch All Data
   useEffect(() => {
@@ -125,7 +147,7 @@ export default function JobApplicationProfileDetail() {
           </p>
         </div>
 
-            {/* job info (title, description, salary, location) */}
+        {/* job info (title, description, salary, location) */}
         <div className="flex-grow">
           <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
           <ul className="list-disc ml-6 text-gray-700 text-sm mt-2">
@@ -138,7 +160,7 @@ export default function JobApplicationProfileDetail() {
             <li>{job.location || "No location"}</li>
           </ul>
 
-              {/* jobseeker grid (email, phone, applied_at, location) */}
+          {/* jobseeker grid (email, phone, applied_at, location) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Mail size={16} /> {seeker.email || "—"}
@@ -254,6 +276,21 @@ export default function JobApplicationProfileDetail() {
             ))
           ) : (
             <p className="text-gray-500 text-sm">No languages found</p>
+          )}
+        </div>
+        {/* Resume */}
+        <div className="mt-4">
+          <h4 className="font-semibold text-gray-700 mb-2">Resume</h4>
+          {resumes.length > 0 ? (
+            resumes.map((resume) => (
+              <p key={resume.id} className="text-sm text-blue-600">
+                <a href={resume.file} target="_blank" rel="noopener noreferrer">
+                  {resume.title}
+                </a>
+              </p>
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm">No resume uploaded</p>
           )}
         </div>
       </div>

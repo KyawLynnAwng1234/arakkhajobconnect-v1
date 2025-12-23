@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
 
@@ -10,6 +11,11 @@
   --color-grayactive: #eaeaea;
   --color-bluecustom: #1e88e5;
   --color-graycustom: #9CA3AF;
+  --color-yellowbutton: #ffc947;
+  --color-hoveryellowbutton: #f3bc3b;
+
+  /* font inter */
+  --font-inter: "Inter", sans-serif;
 }
 
 @layer utilities {
@@ -37,21 +43,6 @@
 
   .gray-text-custom {
     color: var(--blue-11, #1a1a1a);
-  }
-
-  .company-border-custom {
-    border-color: var(--blue-11, #e6f4fe);
-  }
-
-  .feacture-company-color {
-    color: var(--blue-11, #1e88e5);
-  }
-
-  .search-button {
-    background-color: var(--blue-11, #ffc947);
-  }
-  .hover-search-button:hover {
-    background-color: var(--blue-11, #f3bc3b);
   }
 
   .sky-bg-employer {
