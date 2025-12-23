@@ -18,3 +18,4 @@ class AboutUsAdmin(admin.ModelAdmin):
     form = AboutUsAdminForm
 admin.site.register(PrivacyPolicy)
 admin.site.register(AboutUs,AboutUsAdmin)
+admin.site.register(ContactMessage)

@@ -7,7 +7,7 @@ from Jobs.serializers import JobsSerializer
 from Application.models import Resume
 from JobSeekerProfile.models import Education, Experience, Skill, Language
 
-# ---------- Serializers ----------
+#Serializers
 class ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Resume
@@ -25,12 +25,35 @@ class ApplicationListSerializer(serializers.ModelSerializer):
 
 class ApplicationDetailSerializer(serializers.ModelSerializer):
     job = JobsSerializer(read_only=True)
+    resume = serializers.SerializerMethodField()
     job_title = serializers.CharField(source="job.title", read_only=True)
     employer_company = serializers.CharField(source="job.employer.business_name", read_only=True)
+    resume_file_url = serializers.CharField(source="resume.file.url", read_only=True)
 
     class Meta:
         model = Application
         fields = "__all__"
+    
+    
+    # Get the default resume for this jobseeker profile
+    def get_resume(self, obj):
+        if obj.job_seeker_profile:
+            default_resume = obj.job_seeker_profile.resumes.filter(is_default=True).first()
+            if not default_resume:
+                default_resume = obj.job_seeker_profile.resumes.last()
+            if default_resume:
+                return ResumeSerializer(default_resume).data
+        return None
+
+    # Get the resume file URL
+    def get_resume_file_url(self, obj):
+        if obj.job_seeker_profile:
+            default_resume = obj.job_seeker_profile.resumes.filter(is_default=True).first()
+            if not default_resume:
+                default_resume = obj.job_seeker_profile.resumes.last()
+            if default_resume and default_resume.file:
+                return default_resume.file.url
+        return None
 
 class SaveJobsSerializer(serializers.ModelSerializer):
     job=JobsSerializer(read_only=True)

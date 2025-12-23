@@ -20,3 +20,6 @@ class Notification(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
+    def __str__(self):
+        return f"Notification to {self.user.email} - {self.message[:20]}..."
+

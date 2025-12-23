@@ -10,16 +10,12 @@ from django.views.decorators.http import require_POST
 from django.contrib.contenttypes.models import ContentType
 from django.template.response import TemplateResponse
 from django.utils.http import urlencode, url_has_allowed_host_and_scheme
-
 from .models import Notification
-from Jobs.models import Jobs  # adjust if different app/model name
+from Jobs.models import Jobs
+from legal.models import ContactMessage
 
 
 def _safe_next(request, default_name="admin-notifications"):
-    """
-    Returns a safe absolute/relative URL to redirect back to.
-    Prefers POST 'next', then GET 'next'; falls back to the list route.
-    """
     nxt = request.POST.get("next") or request.GET.get("next")
     if nxt and url_has_allowed_host_and_scheme(nxt, allowed_hosts={request.get_host()}):
         return nxt
@@ -37,9 +33,6 @@ def _fmt_dt(dt):
 
 
 def _list_url(status_filter=None, page=None):
-    """
-    Build the notifications list URL with optional status/page query.
-    """
     base = reverse("admin-notifications")
     q = {}
     if status_filter:
@@ -53,13 +46,9 @@ def _list_url(status_filter=None, page=None):
 
 @staff_member_required
 def admin_notifications_page(request):
-    """
-    Renders the notifications list. Also handles bulk actions via POST:
-    - action=bulk_delete  -> delete selected notifications
-    - action=bulk_mark_read -> mark selected notifications as read
-    """
-    status_filter = request.GET.get("status") or request.POST.get("status") or "unread"
-    page_number = request.GET.get("page") or request.POST.get("page") or 1
+    status_filter = request.GET.get("status") or "unread"
+    type_filter = request.GET.get("type")
+    page_number = request.GET.get("page", 1)
 
     # Handle bulk actions
     if request.method == "POST":
@@ -76,7 +65,7 @@ def admin_notifications_page(request):
             count = qs.count()
             qs.delete()
             messages.success(request, f"Deleted {count} notification(s).")
-            return redirect(_list_url(status_filter, None))  # after delete, go to page 1
+            return redirect(_list_url(status_filter, None))
 
         elif action == "bulk_mark_read":
             count = qs.update(is_read=True)
@@ -86,36 +75,49 @@ def admin_notifications_page(request):
         else:
             messages.error(request, "Unknown action.")
             return redirect(_list_url(status_filter, page_number))
-
-    # GET flow: render list
+        
     ct_jobs = ContentType.objects.get_for_model(Jobs, for_concrete_model=False)
+    ct_contact = ContentType.objects.get_for_model(ContactMessage)
+
     qs = (
         Notification.objects
-        .filter(content_type=ct_jobs)
+        .filter(content_type__in=[ct_jobs, ct_contact])
         .select_related("content_type", "user")
         .order_by("-created_at")
     )
+
     if status_filter == "unread":
         qs = qs.filter(is_read=False)
 
+    if type_filter:
+        qs = qs.filter(type=type_filter)
+
     page_obj = Paginator(qs, 5).get_page(page_number)
-    unread_count = Notification.objects.filter(content_type=ct_jobs, is_read=False).count()
+    unread_job_count = Notification.objects.filter(
+        content_type=ct_jobs,
+        type="job",
+        is_read=False
+    ).count()
+
+    unread_contact_count = Notification.objects.filter(
+        content_type=ct_contact,
+        type="contact",
+        is_read=False
+    ).count()
 
     ctx = {
-        **admin.site.each_context(request),  # required for admin sidebar
+        **admin.site.each_context(request),
         "page_obj": page_obj,
         "status_filter": status_filter,
-        "unread_count": unread_count,
+        "current_type": type_filter,
+        "unread_count": unread_job_count,
+        "contact_unread_count": unread_contact_count,
     }
     return render(request, "admin/notifications_page.html", ctx)
-
 
 @staff_member_required
 @require_POST
 def admin_notifications_mark_read(request, pk):
-    """
-    Mark a single notification as read, then redirect back.
-    """
     try:
         notif = Notification.objects.get(pk=pk)
     except Notification.DoesNotExist:
@@ -139,9 +141,6 @@ def admin_notification_mark_unread(request, pk):
 @staff_member_required
 @require_POST
 def admin_notifications_mark_all(request):
-    """
-    Mark all Job notifications as read (respects 'status' filter on current tab).
-    """
     status_filter = request.POST.get("status", "unread")
     ct_jobs = ContentType.objects.get_for_model(Jobs, for_concrete_model=False)
     qs = Notification.objects.filter(content_type=ct_jobs)
@@ -154,12 +153,16 @@ def admin_notifications_mark_all(request):
 @staff_member_required
 def admin_notifications_count(request):
     ct_jobs = ContentType.objects.get_for_model(Jobs, for_concrete_model=False)
-    unread = Notification.objects.filter(content_type=ct_jobs, is_read=False).count()
-    return JsonResponse({"unread": unread})
+    ct_contact = ContentType.objects.get_for_model(ContactMessage)
 
+    count = Notification.objects.filter(
+        content_type__in=[ct_jobs, ct_contact],
+        is_read=False
+    ).count()
+
+    return JsonResponse({"count": count})
 
 def _admin_change_url_for(obj):
-    """Return admin change URL for any model instance, or None."""
     try:
         opts = obj._meta
         return reverse(f"admin:{opts.app_label}_{opts.model_name}_change", args=[obj.pk])
@@ -170,8 +173,6 @@ def _admin_change_url_for(obj):
 @staff_member_required
 def admin_notification_detail(request, pk):
     noti = get_object_or_404(Notification.objects.select_related("user"), pk=pk)
-
-    # Resolve job if this notification is about a Job
     job = None
     job_admin_url = None
     if noti.content_type == ContentType.objects.get_for_model(Jobs):
@@ -179,17 +180,11 @@ def admin_notification_detail(request, pk):
         if job:
             job_admin_url = reverse(
                 f"admin:{job._meta.app_label}_{job._meta.model_name}_change",
-                args=[job.pk]
-            )
-
-    # Build a SAFE list of (label, value) rows for the template
+                args=[job.pk])
     job_info = []
     if job:
-        # Title
         if hasattr(job, "title"):
             job_info.append(("Title", job.title))
-
-        # Employer (+ email if available)
         employer_txt = None
         if hasattr(job, "employer") and job.employer:
             employer_txt = str(job.employer)
@@ -200,7 +195,6 @@ def admin_notification_detail(request, pk):
                 pass
         if employer_txt:
             job_info.append(("Employer", employer_txt))
-
         # Location
         if hasattr(job, "location") and getattr(job, "location"):
             job_info.append(("Location", job.location))
