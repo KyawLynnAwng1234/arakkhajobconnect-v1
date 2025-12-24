@@ -6,13 +6,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Notification
 from Application.models import *
+from legal.models import *
 from Jobs.models import *
 from .serializers import NotificationSerializer
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
-
-
 from rest_framework.permissions import AllowAny
+from django.contrib.auth import get_user_model
+User=get_user_model()
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -183,3 +184,37 @@ def job_notifications_list(request):
           .order_by('-created_at'))
     serializer = NotificationSerializer(qs, many=True)
     return Response(serializer.data)
+
+#notificaion for contact messages
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated,IsAdminUser])
+def notify_admin_contact(contact):
+    admin = User.objects.filter(is_superuser=True).first()
+    if not admin:
+        return
+
+    ct_contact = ContentType.objects.get_for_model(ContactMessage)
+
+    Notification.objects.create(
+        recipient=admin,
+        title="New Contact Message",
+        message=f"{contact.full_name} sent a contact message",
+        content_type=ct_contact,    
+        object_id=contact.id,         
+    )
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser,IsAuthenticated])
+def contact_message_notifications_list(request):
+    """
+    Admin: list ONLY ContactMessage-related notifications (site-wide).
+    """
+    ct_contact = ContentType.objects.get_for_model(ContactMessage, for_concrete_model=False)
+    qs = (Notification.objects
+          .filter(content_type=ct_contact)
+        #   .select_related('content_type')
+          .order_by('-created_at'))
+    serializer = NotificationSerializer(qs, many=True)
+    return Response(serializer.data)
+

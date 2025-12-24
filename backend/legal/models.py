@@ -22,3 +22,26 @@ class AboutUs(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+class ContactMessage(models.Model):
+    SUBJECT_CHOICES = [
+        ("general", "General Inquiry"),
+        ("job", "Job Related"),
+        ("employer", "Employer Support"),
+        ("technical", "Technical Issue"),
+        ("other", "Other"),
+    ]
+
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=20, choices=SUBJECT_CHOICES)
+    message = models.TextField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.subject}"
+

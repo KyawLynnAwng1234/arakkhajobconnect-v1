@@ -143,44 +143,47 @@ def login_employer(request):
     email = request.data.get("email")
     password = request.data.get("password")
 
-    user = authenticate(request, email=email, password=password)
+    #Check if user exists
+    try:
+        user_obj = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response(
+            {"error": "Please register first"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
+    #Check password
+    user = authenticate(request, email=email, password=password)
     if not user:
         return Response(
-            {"error": "Invalid credentials"},
+            {"error": "Incorrect password"},
             status=status.HTTP_401_UNAUTHORIZED
         )
 
-    if not user.role == "employer":
+    #Role check
+    if user.role != "employer":
         return Response(
             {"error": "Not an employer account"},
             status=status.HTTP_403_FORBIDDEN
         )
 
-    #LOGIN SUCCESS (session / token)
+    #Login
     login(request, user)
 
-    #NEW — DEVICE TRACKING (ADD THIS)
+    #Device tracking
     device, created, info = record_login_device(request, user)
 
     if created:
-            send_new_device_email(
-                user=user,
-                device=device,
-                ip=device.ip_address
-            )
-
-    # (optional debug)
-    print("EMPLOYER LOGIN DEVICE:")
-    print("  Device:", info["device"])
-    print("  OS:", info["os"])
-    print("  Browser:", info["browser"])
-    print("  NEW DEVICE?", created)
+        send_new_device_email(
+            user=user,
+            device=device,
+            ip=device.ip_address
+        )
 
     return Response(
         {
             "message": "Login successful",
-            "new_device": created,   # optional (frontend use later)
+            "new_device": created,
         },
         status=status.HTTP_200_OK
     )

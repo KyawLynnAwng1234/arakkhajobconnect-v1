@@ -17,25 +17,12 @@ def notify_on_job_created(sender, instance, created, **kwargs):
     # Delay until transaction commits (prevents duplicates in admin or nested saves)
     transaction.on_commit(lambda: Notification.objects.create(
         user=target_user,
-        message=f"Your job '{getattr(instance, 'title', instance.id)}' was created.",
-        type="job_created",
+        message=f" Job '{getattr(instance, 'title', instance.id)}' was created.",
+        type="job",
         content_type=ContentType.objects.get_for_model(Jobs),
         object_id=instance.id,
     ))
 
-#Application created -> notify employer
-@receiver(post_save, sender=Application)
-def notify_on_application_created(sender, instance, created, **kwargs):
-    if not created:
-        return
-    employer_user = instance.job.employer.user
-    transaction.on_commit(lambda: Notification.objects.create(
-        user=employer_user,
-        message=f"New application submitted for '{getattr(instance.job, 'title', instance.job_id)}'.",
-        type="application_created",
-        content_type=ContentType.objects.get_for_model(Application),
-        object_id=instance.id,
-    ))
 
 
 #Track old status before save (for status-change detection)

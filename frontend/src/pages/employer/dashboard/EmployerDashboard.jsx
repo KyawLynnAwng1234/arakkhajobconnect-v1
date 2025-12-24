@@ -43,8 +43,6 @@ export default function EmployerDashboardLayout() {
     }
   }, [employer]);
 
-  console.log("EMPLOYER FROM CONTEXT:", employer);
-
    // Loading state while authentication data is being fetched
   if (authLoading) {
     return (

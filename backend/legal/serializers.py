@@ -10,3 +10,8 @@ class AboutUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AboutUs
         fields = ['id', 'title', 'content', 'mission_statement', 'vision_statement', 'updated_at']
+    
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = ['id', 'full_name', 'email', 'subject', 'message', 'phone', 'created_at', 'is_read']
