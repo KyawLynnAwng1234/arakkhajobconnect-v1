@@ -142,7 +142,7 @@ const Companies = ({ collapse }) => {
               <div className="max-sm:col-span-2 col-span-1 w-full">
                 <button
                   onClick={handleSearch}
-                  className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg search-button text-darkblue hover-search-button hover-blue font-semibold transition shadow-md cursor-pointer"
+                  className="max-md:h-[40px] max-xl:h-[48px] h-[55px] w-full px-5 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
                 >
                   Search
                 </button>

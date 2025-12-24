@@ -125,7 +125,7 @@ export default function JobApplicationProfileDetail() {
           </p>
         </div>
 
-            {/* job info (title, description, salary, location) */}
+        {/* job info (title, description, salary, location) */}
         <div className="flex-grow">
           <h3 className="text-xl font-semibold text-gray-800">{job.title}</h3>
           <ul className="list-disc ml-6 text-gray-700 text-sm mt-2">
@@ -138,7 +138,7 @@ export default function JobApplicationProfileDetail() {
             <li>{job.location || "No location"}</li>
           </ul>
 
-              {/* jobseeker grid (email, phone, applied_at, location) */}
+          {/* jobseeker grid (email, phone, applied_at, location) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Mail size={16} /> {seeker.email || "—"}
@@ -161,7 +161,7 @@ export default function JobApplicationProfileDetail() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
         {/* Education */}
         <div className="bg-white p-4 rounded-xl shadow-sm">
-          <h4 className="font-semibold text-gray-700 mb-3">Education</h4>
+          <h4 className="font-semibold text-gray-700 mb-3 text-xl">Education</h4>
           {education.length > 0 ? (
             education.map((edu) => (
               <div key={edu.id} className="mb-3 text-sm text-gray-600">
@@ -185,7 +185,7 @@ export default function JobApplicationProfileDetail() {
 
         {/* Skills */}
         <div className="bg-white p-4 rounded-xl shadow-sm">
-          <h4 className="font-semibold text-gray-700 mb-3">Skills</h4>
+          <h4 className="font-semibold text-gray-700 mb-3 text-xl">Skills</h4>
           {skills.length > 0 ? (
             skills.map((skill) => {
               const levelMap = {
@@ -221,7 +221,7 @@ export default function JobApplicationProfileDetail() {
 
         {/* Experience */}
         <div className="bg-white p-4 rounded-xl shadow-sm">
-          <h4 className="font-semibold text-gray-700 mb-3">Experience</h4>
+          <h4 className="font-semibold text-gray-700 mb-3 text-xl">Experience</h4>
           {experience.length > 0 ? (
             experience.map((exp) => (
               <div key={exp.id} className="mb-3 text-sm text-gray-600">
@@ -245,7 +245,7 @@ export default function JobApplicationProfileDetail() {
 
         {/* Languages */}
         <div className="bg-white p-4 rounded-xl shadow-sm">
-          <h4 className="font-semibold text-gray-700 mb-3">Languages</h4>
+          <h4 className="font-semibold text-gray-700 mb-3 text-xl">Languages</h4>
           {languages.length > 0 ? (
             languages.map((lang) => (
               <p key={lang.id} className="text-sm text-gray-600">
@@ -254,6 +254,27 @@ export default function JobApplicationProfileDetail() {
             ))
           ) : (
             <p className="text-gray-500 text-sm">No languages found</p>
+          )}
+        </div>
+
+        {/* Resume */}
+        <div className="bg-white p-4 rounded-xl shadow-sm">
+          <h4 className="font-semibold text-gray-700 mb-3 text-xl">Resume</h4>
+          {application.resume ? (
+            <div className="space-y-0.5">
+              <p className="text-md">
+                {application.resume.title}
+              </p>
+              <a className="text-blue-600"
+                href={API_URL + application.resume.file}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View File
+              </a>
+            </div>
+          ) : (
+            <p className="text-gray-500 text-sm">No resume uploaded</p>
           )}
         </div>
       </div>
