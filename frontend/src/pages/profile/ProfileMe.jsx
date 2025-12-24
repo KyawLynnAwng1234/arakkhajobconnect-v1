@@ -256,25 +256,25 @@ export default function ProfileMe() {
               <a
                 href={profile.website || "#"}
                 target="_blank"
-                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-                🌐 Website
+                <CiGlobe /> {profile.website || "Website"}
               </a>
 
               <a
                 href={profile.linkedin || "#"}
                 target="_blank"
-                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-                💼 LinkedIn
+                <FaLinkedin /> {profile.linkedin || "LinkedIn"}
               </a>
 
               <a
                 href={profile.github || "#"}
                 target="_blank"
-                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition"
+                className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-                🐙 GitHub
+                <FaGithub /> {profile.github || "GitHub"}
               </a>
             </div>
           </div>

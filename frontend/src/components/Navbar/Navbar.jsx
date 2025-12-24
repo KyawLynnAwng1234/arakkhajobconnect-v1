@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, X, User, Bookmark, FileText, LogOut } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
@@ -7,7 +7,24 @@ import logo from "../../assets/images/logo.png";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false); // Mobile menu state
   const [dropdownOpen, setDropdownOpen] = useState(false); // User dropdown state
+  const dropdownRef = useRef(null);
   const { user, loading, logout } = useAuth();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   useEffect(() => {
     if (!loading && user) {
@@ -83,7 +100,7 @@ export default function Navbar() {
             ) : (
               <>
                 {/* Dropdown */}
-                <div className="relative">
+                <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="text-darkblue font-semibold flex items-center gap-1 focus:outline-none"
