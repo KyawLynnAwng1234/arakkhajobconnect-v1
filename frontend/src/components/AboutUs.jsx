@@ -48,7 +48,7 @@ export default function AboutUs() {
 
       {/* CKEditor HTML content */}
       <div
-        className="prose max-w-none"
+        className="max-w-none"
         dangerouslySetInnerHTML={{ __html: about.content }}
       />
 
@@ -56,7 +56,7 @@ export default function AboutUs() {
         <div className="mt-10">
           <h2 className="text-2xl font-semibold mb-3">Our Mission</h2>
           <div
-            className="prose max-w-none"
+            className="max-w-none"
             dangerouslySetInnerHTML={{
               __html: about.mission_statement,
             }}
@@ -68,7 +68,7 @@ export default function AboutUs() {
         <div className="mt-10">
           <h2 className="text-2xl font-semibold mb-3">Our Vision</h2>
           <div
-            className="prose max-w-none"
+            className="max-w-none"
             dangerouslySetInnerHTML={{
               __html: about.vision_statement,
             }}

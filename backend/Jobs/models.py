@@ -11,6 +11,13 @@ class JobCategory(models.Model):
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
     name = models.CharField(max_length=100)
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="children"
+    )
     created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
     user=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
@@ -98,7 +105,7 @@ class Jobs(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
-       # 🔹 New field
+    #New field
     priority = models.CharField(
         max_length=10,
         choices=PRIORITY_CHOICES,

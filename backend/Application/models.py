@@ -61,7 +61,7 @@ class Application(models.Model):
         default=uuid.uuid4,    # Auto-generate UUID v4
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
-    job_seeker_profile = models.ForeignKey(JobseekerProfile,on_delete=models.CASCADE,null=True)
+    job_seeker_profile = models.ForeignKey(JobseekerProfile,on_delete=models.CASCADE,null=True,related_name='applications')
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE,related_name='applications')
     status = models.CharField(max_length=50,choices=STATUS_CHOICES,default='P',null=True, blank=True)
     cover_letter_text = models.TextField(null=True)

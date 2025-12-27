@@ -105,22 +105,22 @@ export default function ProfileMe() {
     axios
       .get(`${API_URL}/accounts-jobseeker/education/?profile=${profile.id}`)
       .then((res) => setEducationList(res.data))
-      .catch(() => {});
+      .catch(() => { });
 
     axios
       .get(`${API_URL}/accounts-jobseeker/experience/?profile=${profile.id}`)
       .then((res) => setExperienceList(res.data))
-      .catch(() => {});
+      .catch(() => { });
 
     axios
       .get(`${API_URL}/accounts-jobseeker/language/?profile=${profile.id}`)
       .then((res) => setLanguageList(res.data))
-      .catch(() => {});
+      .catch(() => { });
 
     axios
       .get(`${API_URL}/accounts-jobseeker/skill/?profile=${profile.id}`)
       .then((res) => setSkillList(res.data))
-      .catch(() => {});
+      .catch(() => { });
   }, [profile]);
 
   // -----------------------
@@ -258,35 +258,24 @@ export default function ProfileMe() {
                 target="_blank"
                 className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-
                 🌐{profile.website || "Website"}
-
                 <CiGlobe /> {profile.website || "Website"}
-
               </a>
-
               <a
                 href={profile.linkedin || "#"}
                 target="_blank"
                 className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-
                 💼 {profile.linkedin || "Linkedin"}
-
                 <FaLinkedin /> {profile.linkedin || "LinkedIn"}
-
               </a>
-
               <a
                 href={profile.github || "#"}
                 target="_blank"
                 className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-
                 🐙 {profile.github || "GitHub"}
-
                 <FaGithub /> {profile.github || "GitHub"}
-
               </a>
             </div>
           </div>
@@ -303,15 +292,13 @@ export default function ProfileMe() {
                       <img
                         src={
                           profile.profile_picture
-                            ? `${import.meta.env.VITE_API_URL}${
-                                profile.profile_picture
-                              }`
+                            ? `${import.meta.env.VITE_API_URL}${profile.profile_picture
+                            }`
                             : "/default-avatar.png"
                         }
                         alt="Profile"
-                        className={`relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full object-cover border-4 border-white shadow-2xl transition ${
-                          open ? "ring-4 ring-white/50" : ""
-                        }`}
+                        className={`relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full object-cover border-4 border-white shadow-2xl transition ${open ? "ring-4 ring-white/50" : ""
+                          }`}
                       />
                     </div>
                   </Menu.Button>
@@ -324,9 +311,8 @@ export default function ProfileMe() {
                             onClick={() =>
                               document.getElementById("uploadInput").click()
                             }
-                            className={`${
-                              active ? "bg-gray-100" : ""
-                            } w-full text-left px-4 py-2 text-gray-700 text-sm`}
+                            className={`${active ? "bg-gray-100" : ""
+                              } w-full text-left px-4 py-2 text-gray-700 text-sm`}
                           >
                             Upload Photo
                           </button>
@@ -339,16 +325,14 @@ export default function ProfileMe() {
                             onClick={() =>
                               window.open(
                                 profile.profile_picture
-                                  ? `${import.meta.env.VITE_API_URL}${
-                                      profile.profile_picture
-                                    }`
+                                  ? `${import.meta.env.VITE_API_URL}${profile.profile_picture
+                                  }`
                                   : "/default-avatar.png",
                                 "_blank"
                               )
                             }
-                            className={`${
-                              active ? "bg-gray-100" : ""
-                            } w-full text-left px-4 py-2 text-gray-700 text-sm`}
+                            className={`${active ? "bg-gray-100" : ""
+                              } w-full text-left px-4 py-2 text-gray-700 text-sm`}
                           >
                             View Photo
                           </button>
@@ -382,13 +366,12 @@ export default function ProfileMe() {
       {/* PROFILE MESSAGE */}
       {profileMessage.text && (
         <div
-          className={`container mx-auto px-4 py-3 mt-4 rounded ${
-            profileMessage.type === "success"
+          className={`container mx-auto px-4 py-3 mt-4 rounded ${profileMessage.type === "success"
               ? "bg-green-100 text-green-700"
               : profileMessage.type === "warning"
-              ? "bg-yellow-100 text-yellow-700"
-              : "bg-red-100 text-red-700"
-          }`}
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+            }`}
         >
           {profileMessage.text}
         </div>
