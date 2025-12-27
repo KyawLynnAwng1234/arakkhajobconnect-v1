@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEmployerAuth } from "../../hooks/useEmployerAuth";
 import logo from "../../assets/images/logo.png";
+import signPhoto from "../../assets/images/signphoto.png";
 import usePageTitle from "../../hooks/usePageTitle";
 
 export default function EmployerRegister() {
@@ -108,102 +109,114 @@ export default function EmployerRegister() {
       </header>
 
       {/* CARD */}
-      <div className="bg-blue-50 rounded-2xl shadow-md w-full max-w-md p-8 text-center mt-14">
-        <p className="text-gray-600 mb-2">
-          Are you looking for{" "}
-          <Link to="/sign-in" className="text-blue-600">
-            a job?
-          </Link>
-        </p>
-
-        <h2 className="text-2xl font-bold mb-6">Register as an employer</h2>
-
-        {/* Backend Error */}
-        {formError && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-lg text-sm">
-            {formError}
+      <div className="bg-white w-full min-h-screen flex">
+        <div className="container mx-auto px-4 flex justify-center lg:justify-between items-center space-x-20">
+          <div className="hidden lg:block">
+            <img src={signPhoto} alt="" />
           </div>
-        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 text-left">
-          {/* EMAIL INPUT */}
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Email Address
-            </label>
-            <input
-              type="email"
-              placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring 
+          <div className="bg-white rounded-2xl shadow-md w-full max-w-md p-8 text-center">
+            <p className="text-darkblue mb-2">
+              Are you looking for{" "}
+              <Link to="/sign-in" className="text-blue-600 hover:underline">
+                a job?
+              </Link>
+            </p>
+
+            <h2 className="text-2xl font-bold mb-6 text-darkblue">Register as an employer</h2>
+
+            {/* Backend Error */}
+            {formError && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-300 rounded-lg text-sm">
+                {formError}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4 text-left">
+              {/* EMAIL INPUT */}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-darkblue">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className={`w-full border border-yellowbutton text-darkblue rounded-lg px-3 py-2 focus:outline-none 
                 ${
                   emailError
                     ? "border-red-500 focus:ring-red-300"
                     : "focus:ring-blue-300"
                 }`}
-            />
-            {emailError && (
-              <p className="text-red-500 text-sm mt-1">{emailError}</p>
-            )}
-          </div>
+                />
+                {emailError && (
+                  <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                )}
+              </div>
 
-          {/* PASSWORD INPUT */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring 
+              {/* PASSWORD INPUT */}
+              <div>
+                <label className="block text-sm font-medium mb-1 text-darkblue">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={`w-full border border-yellowbutton text-darkblue rounded-lg px-3 py-2 focus:outline-none 
                 ${
                   passwordError
                     ? "border-red-500 focus:ring-red-300"
                     : "focus:ring-blue-300"
                 }`}
-            />
-            {passwordError && (
-              <p className="text-red-500 text-sm mt-1">{passwordError}</p>
-            )}
+                />
+                {passwordError && (
+                  <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+                )}
+              </div>
+
+              {/* TERMS */}
+              <div className="flex items-center">
+                <input type="checkbox" className="mr-2" />
+                <label className="text-sm text-darkblue">
+                  I accept the Terms & Conditions and Privacy Policy Of Farm
+                  Fresh
+                </label>
+              </div>
+
+              {/* SUBMIT BUTTON */}
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full text-darkblue rounded-lg py-2 font-medium transition duration-300 ease-in-out cursor-pointer ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-yellowbutton hover:bg-hoveryellowbutton hover:text-darkblue-hover"
+                }`}
+              >
+                {loading ? "Registering..." : "Register"}
+              </button>
+            </form>
+
+            <p className="mt-4 text-sm text-darkblue">
+              Already have your account?{" "}
+              <Link
+                to="/employer/sign-in"
+                className="text-blue-600 hover:underline"
+              >
+                Sign In
+              </Link>
+            </p>
           </div>
-
-          {/* TERMS */}
-          <div className="flex items-center">
-            <input type="checkbox" className="mr-2" />
-            <label className="text-sm text-gray-600">
-              I accept the Terms & Conditions and Privacy Policy Of Farm Fresh
-            </label>
-          </div>
-
-          {/* SUBMIT BUTTON */}
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full text-white rounded-lg py-2 font-medium transition ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-sm text-gray-600">
-          Already have your account?{" "}
-          <Link
-            to="/employer/sign-in"
-            className="text-blue-600 hover:underline"
-          >
-            Sign In
-          </Link>
-        </p>
+        </div>
       </div>
 
-      <div className="absolute bottom-4 text-gray-500 text-sm">
-        © 2023 Copyright: Jobstreet.com
-      </div>
+      {/* Footer */}
+      <footer className="fixed bottom-0 right-0 left-0 h-12 flex items-center justify-center border-t border-gray-200 text-md text-gray-500">
+        © 2023 Copyright: Jobstreet .com
+      </footer>
     </div>
   );
 }

@@ -14,33 +14,33 @@ export default function JobCategoryList({ categories, onDelete }) {
   const totalPages = Math.ceil(categories.length / itemsPerPage);
 
   return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">Category List</h2>
+    <div className="mt-16 rounded-2xl shadow-xl bg-white/30 p-6">
+      <h2 className="text-xl font-semibold text-darkblue mb-4">Category List</h2>
 
-      <ul className="space-y-2">
+      <ul className="space-y-4">
         {currentItems.length > 0 ? (
           currentItems.map((cat) => (
             <li
               key={cat.id}
-              className="px-4 py-2 border rounded-md shadow-sm flex justify-between items-center"
+              className="px-5 py-3 border border-x-0 border-t-0 border-yellowbutton flex justify-between items-center"
             >
-              <span>{cat.name}</span>
+              <span className="text-darkblue">{cat.name}</span>
               <div className="flex gap-3 text-sm">
                 <Link
                   to={`/employer/dashboard/job-categories/${cat.id}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-blue-600 underline hover:no-underline"
                 >
                   Detail
                 </Link>
                 <Link
                   to={`/employer/dashboard/job-categories/${cat.id}/edit`}
-                  className="text-green-600 hover:underline"
+                  className="text-green-600 underline hover:no-underline"
                 >
                   Edit
                 </Link>
                 <button
                   onClick={() => onDelete(cat.id)}
-                  className="text-red-600 hover:underline"
+                  className="text-red-600 underline hover:no-underline"
                 >
                   Delete
                 </button>
@@ -48,7 +48,7 @@ export default function JobCategoryList({ categories, onDelete }) {
             </li>
           ))
         ) : (
-          <p className="text-gray-500">No categories found</p>
+          <p className="text-graycustom">No categories found</p>
         )}
       </ul>
 

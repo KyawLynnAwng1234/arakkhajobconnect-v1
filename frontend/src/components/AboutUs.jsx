@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import usePageTitle from "../hooks/usePageTitle";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function AboutUs() {
+
+  usePageTitle('About Us')
+
   const [about, setAbout] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -48,19 +52,21 @@ export default function AboutUs() {
 
       {/* CKEditor HTML content */}
       <div
-        className="prose max-w-none"
+        className="text-base leading-7 text-grayblack max-w-none"
         dangerouslySetInnerHTML={{ __html: about.content }}
       />
 
       {about.mission_statement && (
         <div className="mt-10">
-          <h2 className="text-2xl font-semibold mb-3">Our Mission</h2>
-          <div
-            className="prose max-w-none"
-            dangerouslySetInnerHTML={{
-              __html: about.mission_statement,
-            }}
-          />
+          <div>
+            <h2 className="text-2xl font-semibold mb-3">Our Mission</h2>
+            <div
+              className="text-base leading-7 text-grayblack max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: about.mission_statement,
+              }}
+            />
+          </div>
         </div>
       )}
 
@@ -68,7 +74,7 @@ export default function AboutUs() {
         <div className="mt-10">
           <h2 className="text-2xl font-semibold mb-3">Our Vision</h2>
           <div
-            className="prose max-w-none"
+            className="text-base leading-7 text-grayblack max-w-none"
             dangerouslySetInnerHTML={{
               __html: about.vision_statement,
             }}

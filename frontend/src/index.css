@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
+/* @plugin "@tailwindcss/typography"; */
 @import "slick-carousel/slick/slick.css";
 @import "slick-carousel/slick/slick-theme.css";
 
@@ -69,6 +69,3 @@
   max-width: 1140px !important;
 }
 
-.font-inter {
-  font-family: "Inter", sans-serif;
-}
