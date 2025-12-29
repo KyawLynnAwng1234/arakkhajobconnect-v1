@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import usePageTitle from "../../../hooks/usePageTitle";
 
-export default function JobCategoryForm({ onSuccess, categoryId }) {
+export default function JobCategoryForm({ onSuccess, categoryId, onBack }) {
   const [categoryName, setCategoryName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
   // Page Title (Add/Edit)
@@ -17,6 +15,13 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
       ? `${categoryName || "Edit Category"} | Edit`
       : "Add Job Category"
   );
+
+  useEffect(() => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}, [categoryId]);
 
   // Edit detail load
   useEffect(() => {
@@ -70,7 +75,7 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
         );
         toast.success("Category updated!");
       }
-      //Create mode 
+      //Create mode
       else {
         await axios.post(
           `${API_URL}/job/job-categories/create/`,
@@ -84,7 +89,6 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
       }
       setCategoryName("");
       onSuccess && onSuccess();
-      navigate("/employer/dashboard/job-category");
     } catch (err) {
       console.error("Error saving:", err);
       // Backend validation error
@@ -99,10 +103,27 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white/30 p-6 rounded-2xl shadow-xl">
-      <h2 className="text-xl text-darkblue font-bold mb-4">
-        {categoryId ? "Edit Category" : "Add Category"}
-      </h2>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white/30 p-6 rounded-2xl shadow-xl"
+    >
+      <div className="flex items-center mb-4 gap-6">
+
+        {/* Back button (Edit mode only) */}
+        {categoryId && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="text-sm text-blue-600 font-semibold hover:underline"
+          >
+            ← Back
+          </button>
+        )}
+
+        <h2 className="text-xl text-darkblue font-bold">
+          {categoryId ? "Edit Category" : "Add Category"}
+        </h2>
+      </div>
 
       {/* frontend error */}
       {error && (
@@ -118,7 +139,7 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
           setError("");
         }}
         className={`border rounded-md px-4 py-2 w-full mb-4 text-darkblue focus:outline-none ${
-          error ? "border-red-500" : "border-yellowbutton"
+          error ? "border-red-500" : "border-grayblack/30"
         }`}
         placeholder="Category name"
       />

@@ -35,7 +35,7 @@ export default function MyJobs() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const itemsPerPage = 10;
 
   // Load data
   useEffect(() => {
@@ -122,138 +122,142 @@ export default function MyJobs() {
   const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
 
   return (
-    <div className="px-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-lg font-semibold text-gray-700">Post Jobs</h1>
-        <button
-          onClick={() => navigate("/employer/dashboard/job-create")}
-          className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
-        >
-          + Create New Job
-        </button>
-      </div>
+    <div className="p-6">
+      <div className="p-6 bg-white/30 rounded-2xl shadow-xl">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-xl text-darkblue font-bold">Post Jobs</h1>
+          <button
+            onClick={() => navigate("/employer/dashboard/job-create")}
+            className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
+          >
+            + Create New Job
+          </button>
+        </div>
 
-      {/* Search & Filter */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="flex-1 bg-white border rounded-md p-3 shadow-sm focus:outline-none"
-        />
+        {/* Search & Filter */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="flex-1 bg-transparent border border-grayblack/30 text-darkblue rounded-md p-3 shadow-sm focus:outline-none"
+          />
 
-        <select
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="w-full md:w-48 bg-white border rounded-md p-3 shadow-sm"
-        >
-          <option>All Status</option>
-          <option>Active</option>
-          <option>Closed</option>
-          <option>Expired</option>
-        </select>
-      </div>
+          <select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="w-full md:w-48 bg-transparent border border-grayblack/30 text-darkblue rounded-md p-3 shadow-sm focus:outline-none"
+          >
+            <option>All Status</option>
+            <option>Active</option>
+            <option>Closed</option>
+            <option>Expired</option>
+          </select>
+        </div>
 
-      {/* Table */}
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <table className="w-full text-left border-collapse">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-gray-700 font-semibold text-sm">Title</th>
-              <th className="p-3 text-gray-700 font-semibold text-sm">
-                Job Category
-              </th>
-              <th className="p-3 text-gray-700 font-semibold text-sm">
-                Post Date
-              </th>
-              <th className="p-3 text-gray-700 font-semibold text-sm">
-                Status
-              </th>
-              <th className="p-3 text-gray-700 font-semibold text-sm">
-                Action
-              </th>
-            </tr>
-          </thead>
+        {/* Table */}
+        <div className="shadow-md rounded-lg overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-graywhite">
+              <tr>
+                <th className="p-3 text-darkblue font-semibold text-base">
+                  Title
+                </th>
+                <th className="p-3 text-darkblue font-semibold text-base">
+                  Job Category
+                </th>
+                <th className="p-3 text-darkblue font-semibold text-base">
+                  Post Date
+                </th>
+                <th className="p-3 text-darkblue font-semibold text-base">
+                  Status
+                </th>
+                <th className="p-3 text-darkblue font-semibold text-base">
+                  Action
+                </th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {currentJobs.length > 0 ? (
-              currentJobs.map((job) => (
-                <tr
-                  key={job.id}
-                  className="border-t hover:bg-gray-50 transition-colors"
-                >
-                  <td className="p-3 text-gray-800">
-                    {job.title?.length > 20
-                      ? job.title.substring(0, 20) + "..."
-                      : job.title || "N/A"}
-                  </td>
-                  <td className="p-3 text-gray-600">
-                    {job.category_name?.length > 20
-                      ? job.category_name.substring(0, 20) + "..."
-                      : job.category_name || "N/A"}
-                  </td>
-                  <td className="p-3 text-gray-600">
-                    {job.created_at
-                      ? new Date(job.created_at).toLocaleDateString()
-                      : "N/A"}
-                  </td>
-                  <td className="p-3 text-gray-600">{getJobStatus(job)}</td>
-                  <td className="p-3 space-x-3">
-                    <button
-                      onClick={() => handleDetail(job.id)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => handleEdit(job)}
-                      className="text-green-600 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => confirmDelete(job.id)}
-                      className="text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
+            <tbody>
+              {currentJobs.length > 0 ? (
+                currentJobs.map((job) => (
+                  <tr
+                    key={job.id}
+                    className="border-t border-grayblack/30 hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-5 py-3 text-darkblue">
+                      {job.title?.length > 20
+                        ? job.title.substring(0, 20) + "..."
+                        : job.title || "N/A"}
+                    </td>
+                    <td className="p-5 text-darkblue">
+                      {job.category_name?.length > 20
+                        ? job.category_name.substring(0, 20) + "..."
+                        : job.category_name || "N/A"}
+                    </td>
+                    <td className="px-5 py-3 text-darkblue">
+                      {job.created_at
+                        ? new Date(job.created_at).toLocaleDateString()
+                        : "N/A"}
+                    </td>
+                    <td className="px-5 py-3 text-darkblue">{getJobStatus(job)}</td>
+                    <td className="p-3 space-x-3 text-sm">
+                      <button
+                        onClick={() => handleDetail(job.id)}
+                        className="text-blue-600 underline hover:no-underline"
+                      >
+                        Detail
+                      </button>
+                      <button
+                        onClick={() => handleEdit(job)}
+                        className="text-green-600 underline hover:no-underline"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => confirmDelete(job.id)}
+                        className="text-red-600 underline hover:no-underline"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="p-4 text-center text-gray-500">
+                    No jobs found.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="p-4 text-center text-gray-500">
-                  No jobs found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Component */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+
+        {/* Delete Modal */}
+        <JobDeleteModal
+          show={showConfirm}
+          onClose={() => setShowConfirm(false)}
+          onConfirm={() => handleDelete(jobToDelete)}
+          title="Confirm Delete"
+          message="Are you sure you want to delete this job?"
+        />
       </div>
-
-      {/* Pagination Component */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={(page) => setCurrentPage(page)}
-      />
-
-      {/* Delete Modal */}
-      <JobDeleteModal
-        show={showConfirm}
-        onClose={() => setShowConfirm(false)}
-        onConfirm={() => handleDelete(jobToDelete)}
-        title="Confirm Delete"
-        message="Are you sure you want to delete this job?"
-      />
     </div>
   );
 }
