@@ -177,11 +177,11 @@ export default function Overview() {
                     <div
                       key={notif.id}
                       onClick={() => handleToggleRead(notif)}
-                      className={`flex justify-between items-center p-3 rounded-lg cursor-pointer transition
+                      className={`flex justify-between items-center p-3 border rounded-lg cursor-pointer transition
               ${
                 notif.is_read
-                  ? "bg-graywhite/80 hover:bg-graywhite"
-                  : "bg-yellowbutton/5 border-yellowbutton hover:bg-hoveryellowbutton/10"
+                  ? "border-graywhite/90 hover:border-graywhite bg-graywhite/90 hover:bg-graywhite"
+                  : "bg-yellowbutton/10 border-yellowbutton/13 hover:bg-hoveryellowbutton/13"
               }`}
                     >
                       <div>

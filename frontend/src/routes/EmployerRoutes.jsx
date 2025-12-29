@@ -11,8 +11,6 @@ import JobDetail from "../components/employer/jobs/JobDetail";
 
 import JobCategoryListPage from "../pages/employer/job-categories-page/JobCategoryListPage";
 import JobCategoryCreatePage from "../pages/employer/job-categories-page/JobCategoryCreatePage";
-import JobCategoryEditPage from "../pages/employer/job-categories-page/JobCategoryEditPage";
-import JobCategoryDetailPage from "../pages/employer/job-categories-page/JobCategoryDetailPage";
 
 import NotificationLists from "../pages/employer/dashboard/NotificationLists";
 
@@ -35,8 +33,6 @@ export const EmployerRoutes = (
     {/* job-category */}
     <Route path="job-category" element={<JobCategoryListPage />} />
     <Route path="job-category/create" element={<JobCategoryCreatePage />} />
-    <Route path="job-categories/:id/edit" element={<JobCategoryEditPage />} />
-    <Route path="job-categories/:id" element={<JobCategoryDetailPage />} />
 
     <Route path="notification-list" element={<NotificationLists />} />
 

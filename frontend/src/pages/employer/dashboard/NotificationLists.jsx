@@ -36,7 +36,7 @@ export default function NotificationLists() {
   };
 
   return (
-    <div className="max-w-4xl">
+    <div>
       {/* ================= Header ================= */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-darkblue">Notifications</h1>
@@ -78,16 +78,16 @@ export default function NotificationLists() {
         <p className="text-gray-500">No notifications found.</p>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {filteredNotifications.map((notif) => (
           <div
             key={notif.id}
             onClick={() => handleToggleRead(notif)}
-            className={`flex justify-between items-center p-4 rounded-lg border cursor-pointer transition
+            className={`flex justify-between items-center p-4 border rounded-lg cursor-pointer transition
               ${
                 notif.is_read
-                  ? "bg-graywhite/80 hover:bg-graywhite"
-                  : "bg-yellowbutton/5 border-yellowbutton hover:bg-hoveryellowbutton/10"
+                  ? "border-darkblue/6 hover:border-darkblue-hover/6 bg-darkblue/3 hover:bg-darkblue-hover/3"
+                  : "bg-yellowbutton/15 border-yellowbutton/20 hover:bg-hoveryellowbutton/20"
               }`}
           >
             {/* Text */}
