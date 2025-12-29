@@ -7,7 +7,7 @@ from EmployerProfile.models import EmployerProfile
 class JobCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = JobCategory
-        fields = ['id', 'name']
+        fields = ['id', 'name','created_at', 'updated_at']
     
 
     

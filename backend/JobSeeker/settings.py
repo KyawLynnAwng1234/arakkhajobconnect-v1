@@ -67,10 +67,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "Application.apps.ApplicationConfig",
     "Jobs.apps.JobsConfig",
+    'Accounts.apps.AccountsConfig',
     "anymail",    
 
     #custome apps
-    'Accounts',
+
     'EmployerProfile',
     'JobSeekerProfile',
     'Notification',
