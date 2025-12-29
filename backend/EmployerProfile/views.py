@@ -148,9 +148,9 @@ def login_employer(request):
         user_obj = User.objects.get(email=email)
     except User.DoesNotExist:
         return Response(
-            {"error": "Please register first"},
-            status=status.HTTP_404_NOT_FOUND
-        )
+        {"error": "Account does not exist. Please register first."},
+        status=status.HTTP_400_BAD_REQUEST
+    )
 
     #Check password
     user = authenticate(request, email=email, password=password)

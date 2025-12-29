@@ -65,8 +65,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "Jobs.apps.JobsConfig",
     "Application.apps.ApplicationConfig",
+    "Jobs.apps.JobsConfig",
     "anymail",    
 
     #custome apps
