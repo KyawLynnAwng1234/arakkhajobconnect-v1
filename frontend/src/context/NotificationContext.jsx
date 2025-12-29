@@ -106,7 +106,7 @@ export const NotificationProvider = ({ children }) => {
         toast.error(errorMsg);
       } else {
         console.error("Delete All failed:", err);
-        toast.error("Failed to clear notification.");
+        toast.error("Read the Notifications.");
       }
     }
   };

@@ -24,7 +24,7 @@ def application_notification_list(request):
     """
     user = request.user
 
-    # 1️⃣ Handle case: no logged-in user
+    #Handle case: no logged-in user
     if not user or user.is_anonymous:
         return Response({
             "counts": {"total": 0, "read": 0, "unread": 0},
@@ -33,7 +33,7 @@ def application_notification_list(request):
             "unread_list": [],
         }, status=200)
 
-    # 2️⃣ Handle case: not an employer or no such user
+    #Handle case: not an employer or no such user
     if getattr(user, "role", None) != "employer":
         return Response({
             "counts": {"total": 0, "read": 0, "unread": 0},
@@ -42,7 +42,7 @@ def application_notification_list(request):
             "unread_list": [],
         }, status=200)
 
-    # 3️⃣ Normal case: employer exists → load notifications
+    #Normal case: employer exists → load notifications
     ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
     base_qs = (
         Notification.objects

@@ -1,17 +1,42 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  AlertTriangle,
-  Briefcase,
-  CheckCircle,
-  FileText,
-  LayoutGrid,
-  User,
-} from "lucide-react";
+import { AlertTriangle, Briefcase, CheckCircle, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useNotificationAuth } from "../../../hooks/useNotificationAuth";
+import { toast } from "react-hot-toast";
 
 export default function Overview() {
   const navigate = useNavigate();
+
+  const { notifications, counts, loading, markRead, markUnread, deleteOne } =
+    useNotificationAuth();
+
+  // unread count
+  const unreadCount = notifications?.filter((n) => !n.is_read)?.length || 0;
+
+  // last 4 notifications (newest first)
+  const latestNotifications = notifications
+    ?.slice()
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .slice(0, 4);
+
+  const handleToggleRead = (notif) => {
+    if (notif.is_read) {
+      markUnread(notif.id);
+    } else {
+      markRead(notif.id);
+    }
+  };
+
+  // delete click
+  const handleDelete = (notif) => {
+    if (!notif.is_read) {
+      toast.error("Read the notification.");
+      return;
+    }
+
+    deleteOne(notif.id);
+  };
 
   // Initialize the state for dashboard statistics
   const [stats, setStates] = useState([
@@ -132,12 +157,61 @@ export default function Overview() {
           <div>
             <h1 className="text-xl font-semibold text-darkblue">
               Notifications
+              {unreadCount > 0 && (
+                <span className="ml-2 text-sm bg-red-500 text-graywhite px-2 py-0.5 rounded-full">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
             </h1>
-            <div className="py-3">
-              <div className="bg-white/30 p-6 border border-darkblue/10 rounded-xl shadow-md flex flex-col items-start gap-6">
-                <p>New Job availabel</p>
 
-                <button className="text-darkblue underline font-semibold">
+            <div className="py-3">
+              <div className="bg-white/30 p-6 border border-darkblue/10 rounded-xl shadow-md flex flex-col gap-2">
+                {loading && <p>Loading...</p>}
+
+                {!loading && latestNotifications.length === 0 && (
+                  <p className="text-gray-500">No notifications yet.</p>
+                )}
+
+                {!loading &&
+                  latestNotifications.map((notif) => (
+                    <div
+                      key={notif.id}
+                      onClick={() => handleToggleRead(notif)}
+                      className={`flex justify-between items-center p-3 rounded-lg cursor-pointer transition
+              ${
+                notif.is_read
+                  ? "bg-graywhite/80 hover:bg-graywhite"
+                  : "bg-yellowbutton/5 border-yellowbutton hover:bg-hoveryellowbutton/10"
+              }`}
+                    >
+                      <div>
+                        <p className="font-medium text-grayblack">
+                          {notif.message}
+                        </p>
+                        <span className="text-xs text-gray-500">
+                          {new Date(notif.created_at).toLocaleString()}
+                        </span>
+                      </div>
+
+                      {/* Delete */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // div click မဖြစ်အောင်
+                          handleDelete(notif);
+                        }}
+                        className="text-red-600 font-medium hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+
+                <button
+                  onClick={() =>
+                    navigate("/employer/dashboard/notification-list")
+                  }
+                  className="self-start text-darkblue underline font-semibold cursor-pointer"
+                >
                   View all Notifications
                 </button>
               </div>

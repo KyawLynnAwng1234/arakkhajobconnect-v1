@@ -1,5 +1,6 @@
 from django.db import models
 from Accounts.models import CustomUser
+from Jobs.models import Jobs
 import uuid
 
 class JobseekerProfile(models.Model):
@@ -19,6 +20,13 @@ class JobseekerProfile(models.Model):
     github = models.URLField(blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
+
+    @property
+    def applied_categories(self):
+        return Jobs.objects.filter(applications__job_seeker_profile=self)\
+                       .values_list('category_id', flat=True)\
+                       .distinct()
+
 
     def __str__(self):
         return self.full_name
