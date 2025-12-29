@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useEmployerAuth } from "../../hooks/useEmployerAuth";
 import logo from "../../assets/images/logo.png";
+import signPhoto from "../../assets/images/signphoto.png";
 import usePageTitle from "../../hooks/usePageTitle";
 
 const EmployerSignIn = () => {
@@ -56,73 +57,92 @@ const EmployerSignIn = () => {
         </div>
       </header>
 
-      <main className="flex-grow flex justify-center items-center px-4">
-        <div className="bg-blue-50 rounded-2xl shadow-md w-full max-w-md p-8 text-center">
-          <p className="text-gray-600 mb-2">
-            Are you looking for{" "}
-            <Link to="/sign-in" className="text-blue-600">
-              a job?
-            </Link>
-          </p>
-          <h2 className="text-2xl font-bold mb-6">Sign In as an employer</h2>
+      <div className="bg-white w-full min-h-screen flex">
+        <div className="container mx-auto px-4 flex justify-center lg:justify-between items-center space-x-20">
+          <div className="hidden lg:block">
+            <img src={signPhoto} alt="" />
+          </div>
 
-          {/* Error message */}
-          {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-
-          <form className="space-y-4 text-left" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Password</label>
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                required
-              />
-            </div>
-
-            <div className="flex justify-end text-sm">
-              <Link to="/employer/forgot-password" className="text-blue-600">
-                Forget Password?
+          <div className="bg-white rounded-2xl shadow-md w-full max-w-md p-8 text-center">
+            <p className="text-darkblue mb-2">
+              Are you looking for{" "}
+              <Link to="/sign-in" className="text-blue-600 hover:underline">
+                a job?
               </Link>
-            </div>
+            </p>
+            <h2 className="text-2xl font-bold mb-6 text-darkblue">
+              Sign In as an employer
+            </h2>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 rounded-lg text-lg font-medium transition ${
-                loading
-                  ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
-            >
-              {loading ? "Signing In..." : "Sign In"}
-            </button>
-          </form>
+            {/* Error message */}
+            {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
-          <p className="text-center text-sm text-gray-700 mt-4">
-            Already have your account?{" "}
-            <Link to="/employer/register" className="text-blue-600 font-medium">
-              Register
-            </Link>
-          </p>
+            <form className="space-y-4 text-left" onSubmit={handleSubmit}>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-darkblue">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-2 border border-yellowbutton text-darkblue rounded-lg focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1 text-darkblue">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-yellowbutton text-darkblue rounded-lg focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="flex justify-end text-sm">
+                <Link
+                  to="/employer/forgot-password"
+                  className="text-blue-600 hover:underline"
+                >
+                  Forget Password?
+                </Link>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full text-darkblue py-3 rounded-lg text-lg font-medium transition duration-300 ease-in-out cursor-pointer ${
+                  loading
+                    ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
+                    : "bg-yellowbutton hover:bg-hoveryellowbutton hover:text-darkblue-hover"
+                }`}
+              >
+                {loading ? "Signing In..." : "Sign In"}
+              </button>
+            </form>
+
+            <p className="text-center text-sm text-darkblue mt-4">
+              Already have your account?{" "}
+              <Link
+                to="/employer/register"
+                className="text-blue-600 hover:underline"
+              >
+                Register
+              </Link>
+            </p>
+          </div>
         </div>
-      </main>
+      </div>
 
-      <footer className="absolute bottom-4 text-gray-500 text-sm">
+      {/* Footer */}
+      <footer className="fixed bottom-0 right-0 left-0 h-12 flex items-center justify-center border-t border-gray-200 text-md text-gray-500">
         © 2023 Copyright: Jobstreet .com
       </footer>
     </div>

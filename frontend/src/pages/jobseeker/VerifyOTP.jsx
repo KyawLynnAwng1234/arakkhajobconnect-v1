@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import logo from "../../assets/images/logo.png";
+import signPhoto from "../../assets/images/signphoto.png";
 import usePageTitle from "../../hooks/usePageTitle";
 
 const VerifyOTP = () => {
@@ -217,9 +218,7 @@ const VerifyOTP = () => {
 
   // UI Rendering
   return (
-    <div
-      className="min-h-screen bg-white flex flex-col font-inter"
-    >
+    <div className="min-h-screen bg-white flex flex-col font-inter">
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-1.5 flex items-center justify-between">
           <NavLink to="/" className="text-2xl font-bold text-darkblue">
@@ -233,70 +232,78 @@ const VerifyOTP = () => {
       </header>
 
       {/* Main */}
-      <main className="flex-grow flex justify-center items-center px-4">
-        <div className="bg-blue-50 rounded-xl p-8 w-full max-w-md shadow-md text-center">
-          <p className="mb-4">Check your email for a code</p>
-          <p className="mb-6 text-sm">
-            Enter the 6-digit code we sent to {email}
-          </p>
-
-          {/* OTP INPUTS */}
-          <div className="flex justify-center gap-2 mb-6">
-            {code.map((digit, index) => (
-              <input
-                key={index}
-                maxLength={1}
-                value={digit}
-                ref={(el) => (inputsRef.current[index] = el)}
-                onChange={(e) => handleChange(e.target.value, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onPaste={handlePaste}
-                className="w-12 h-12 text-center border rounded-lg text-lg focus:ring-2 focus:ring-blue-600"
-                placeholder="-"
-              />
-            ))}
+      <div className="bg-white w-full min-h-screen flex">
+        <div className="container mx-auto px-4 flex justify-center lg:justify-between items-center space-x-20">
+          <div className="hidden lg:block">
+            <img src={signPhoto} alt="" />
           </div>
 
-          {/* VERIFY */}
-          <button
-            onClick={handleVerifyClick}
-            disabled={loading || lockTimer > 0}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg disabled:opacity-50"
-          >
-            {loading ? "Verifying..." : "Verify Code"}
-          </button>
+          <div className="bg-white rounded-2xl shadow-md w-full max-w-md p-8 text-center">
+            <p className="mb-4 text-darkblue">Check your email for a code</p>
+            <p className="mb-6 text-sm text-darkblue">
+              Enter the 6-digit code we sent to {email}
+            </p>
 
-          {error && (
-            <p className="mt-3 text-sm text-red-600 font-medium">{error}</p>
-          )}
+            {/* OTP INPUTS */}
+            <div className="flex justify-center gap-2 mb-6">
+              {code.map((digit, index) => (
+                <input
+                  key={index}
+                  maxLength={1}
+                  value={digit}
+                  ref={(el) => (inputsRef.current[index] = el)}
+                  onChange={(e) => handleChange(e.target.value, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onPaste={handlePaste}
+                  className="w-10 h-10 text-center border border-yellowbutton text-darkblue rounded-lg text-lg focus:outline-none"
+                  placeholder="-"
+                />
+              ))}
+            </div>
 
-          {/* RESEND */}
-          <div className="mt-4">
-            {lockTimer > 0 ? (
-              <p className="text-red-600 text-sm font-medium">
-                Wait ({lockTimer}s)
-              </p>
-            ) : resendTimer > 0 ? (
-              <p className="text-blue-600 text-sm">Resend in {resendTimer}s</p>
-            ) : (
-              <button
-                onClick={handleResend}
-                disabled={resendLoading}
-                className="text-blue-600 text-sm hover:underline"
-              >
-                {resendLoading ? "Resending..." : "Resend Code"}
-              </button>
+            {/* VERIFY */}
+            <button
+              onClick={handleVerifyClick}
+              disabled={loading || lockTimer > 0}
+              className="w-full bg-yellowbutton hover:bg-hoveryellowbutton text-darkblue hover:text-darkblue-hover py-2 rounded-lg disabled:opacity-50 transition duration-300 ease-in-out cursor-pointer"
+            >
+              {loading ? "Verifying..." : "Verify Code"}
+            </button>
+
+            {error && (
+              <p className="mt-3 text-sm text-red-600 font-medium">{error}</p>
             )}
 
-            {resendMsg && (
-              <p className="text-green-600 text-sm mt-2">{resendMsg}</p>
-            )}
+            {/* RESEND */}
+            <div className="mt-4">
+              {lockTimer > 0 ? (
+                <p className="text-red-600 text-sm font-medium">
+                  Wait ({lockTimer}s)
+                </p>
+              ) : resendTimer > 0 ? (
+                <p className="text-blue-600 text-sm">
+                  Resend in {resendTimer}s
+                </p>
+              ) : (
+                <button
+                  onClick={handleResend}
+                  disabled={resendLoading}
+                  className="text-blue-600 text-sm hover:underline cursor-pointer"
+                >
+                  {resendLoading ? "Resending..." : "Resend Code"}
+                </button>
+              )}
+
+              {resendMsg && (
+                <p className="text-green-600 text-sm mt-2">{resendMsg}</p>
+              )}
+            </div>
           </div>
         </div>
-      </main>
+      </div>
 
-      <footer className="text-center py-3 text-gray-500 border-t">
-        © 2023 Jobstreet.com
+      <footer className="fixed bottom-0 left-0 right-0 h-12 flex items-center justify-center border-t border-gray-200 text-md text-gray-500">
+        © 2023 Copyright: Jobstreet .com
       </footer>
     </div>
   );

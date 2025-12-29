@@ -12,6 +12,7 @@ import {
 import { useEmployerAuth } from "../../../hooks/useEmployerAuth";
 import Notification from "./Notification";
 import usePageTitle from "../../../hooks/usePageTitle";
+import logo from "../../../assets/images/logo.png";
 
 // Sidebar menu items for employer dashboard
 export const sidebarItems = [
@@ -29,21 +30,21 @@ export default function EmployerDashboardLayout() {
   // Employer authentication and state
   const { employer, authLoading, logout, resendEmail } = useEmployerAuth();
   const navigate = useNavigate();
-   // Dropdown
+  // Dropdown
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // Loading state for email verification resend
   const [resendLoading, setResendLoading] = useState(false);
   // Flag to show verification message
   const [showVerificationMessage, setShowVerificationMessage] = useState(false);
 
-   // Show verification message if employer exists but not verified
+  // Show verification message if employer exists but not verified
   useEffect(() => {
     if (employer) {
       setShowVerificationMessage(!employer.is_verified);
     }
   }, [employer]);
 
-   // Loading state while authentication data is being fetched
+  // Loading state while authentication data is being fetched
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -65,7 +66,7 @@ export default function EmployerDashboardLayout() {
     }
   };
 
-   // If employer data not yet available, show loading
+  // If employer data not yet available, show loading
   if (!employer) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -80,8 +81,14 @@ export default function EmployerDashboardLayout() {
   return (
     <div className="min-h-screen flex bg-gray-100 font-inter">
       {/* Sidebar (fixed left) */}
-      <aside className="fixed top-0 left-0 h-full w-64 bg-white shadow-md z-20">
-        <div className="p-6 text-2xl font-bold text-blue-700">Employer</div>
+      <aside className="fixed top-0 left-0 h-full w-64 bg-darkblue shadow-md z-20">
+        <NavLink to="/" className="text-2xl font-bold text-darkblue">
+          <img
+            src={logo}
+            alt="JobSeeker Logo"
+            className="h-13 object-contain"
+          />
+        </NavLink>
         <nav className="space-y-2 p-4">
           {sidebarItems.map((item) => {
             const Icon = item.icon;
@@ -106,8 +113,8 @@ export default function EmployerDashboardLayout() {
                     emailNotVerified
                       ? "opacity-40 cursor-not-allowed" // 🔒 Disabled UI
                       : isActive
-                      ? "bg-blue-100 text-blue-700 font-semibold"
-                      : "hover:bg-gray-100"
+                      ? "bg-hoveryellowbutton/10 text-yellowbutton font-semibold"
+                      : "text-graywhite hover:text-yellowbutton hover:bg-hoveryellowbutton/10"
                   }`
                 }
               >
@@ -168,7 +175,7 @@ export default function EmployerDashboardLayout() {
         </header>
 
         {/* Main scrollable content */}
-        <main className="bg-sky-50 min-h-screen pt-25 p-6">
+        <main className="bg-graywhite min-h-screen pt-25 p-6">
           {/* verification alert */}
           {emailNotVerified && (
             <div className="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4 rounded">
@@ -199,3 +206,125 @@ export default function EmployerDashboardLayout() {
     </div>
   );
 }
+
+// import { useState } from "react";
+// import { NavLink, Outlet, useNavigate } from "react-router-dom";
+// import {
+//   Briefcase,
+//   FileText,
+//   User,
+//   Settings,
+//   LogOut,
+//   LayoutGrid,
+//   Mail,
+// } from "lucide-react";
+// import Notification from "./Notification";
+// import logo from "../../../assets/images/logo.png";
+
+// // Sidebar menu items
+// export const sidebarItems = [
+//   { route: "dashboard", label: "Dashboard", icon: Briefcase },
+//   { route: "job-category", label: "Job Category", icon: LayoutGrid },
+//   { route: "my-jobs", label: "Jobs List", icon: FileText },
+//   { route: "applications", label: "Job Application", icon: User },
+//   { route: "profile", label: "Profile", icon: User },
+//   { route: "settings", label: "Settings", icon: Settings },
+// ];
+
+// export default function EmployerDashboardLayout() {
+//   const navigate = useNavigate();
+//   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+//   return (
+//     <div className="min-h-screen flex bg-gray-100 font-inter">
+//       {/* ================= Sidebar ================= */}
+//       <aside className="fixed top-0 left-0 h-full w-64 bg-darkblue text-graywhite shadow-md z-20">
+//         {/* Logo */}
+//         <div className="p-4 border-b border-white/10">
+//           <NavLink to="/">
+//             <img src={logo} alt="Logo" className="h-12 object-contain" />
+//           </NavLink>
+//         </div>
+
+//         {/* Menu */}
+//         <nav className="p-4 space-y-1">
+//           {sidebarItems.map((item) => {
+//             const Icon = item.icon;
+//             return (
+//               <NavLink
+//                 key={item.route}
+//                 to={`/employer/dashboard/${
+//                   item.route === "dashboard" ? "" : item.route
+//                 }`}
+//                 end={item.route === "dashboard"}
+//                 className={({ isActive }) =>
+//                   `flex items-center gap-3 px-3 py-2 rounded-lg transition
+//                   ${
+//                     isActive
+//                       ? "bg-hoveryellowbutton/10 text-yellowbutton font-semibold"
+//                       : "hover:bg-hoveryellowbutton/10 hover:text-yellowbutton"
+//                   }`
+//                 }
+//               >
+//                 <Icon size={18} />
+//                 <span>{item.label}</span>
+//               </NavLink>
+//             );
+//           })}
+//         </nav>
+//       </aside>
+
+//       {/* ================= Main ================= */}
+//       <div className="flex-1 ml-64">
+//         {/* ================= Header ================= */}
+//         <header className="fixed top-0 left-64 right-0 h-16 bg-white shadow-sm z-10 flex items-center justify-between px-6">
+//           <NavLink to="/" className="text-gray-600 hover:text-blue-600">
+//             Home
+//           </NavLink>
+
+//           <div className="flex items-center gap-4">
+//             <Notification />
+
+//             <button className="p-2 rounded-full hover:bg-gray-100">
+//               <Mail size={20} />
+//             </button>
+
+//             {/* Profile Dropdown */}
+//             <div className="relative">
+//               <button
+//                 onClick={() => setDropdownOpen(!dropdownOpen)}
+//                 className="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200"
+//               >
+//                 <User size={18} />
+//                 <span className="text-sm font-medium">Employer</span>
+//               </button>
+
+//               {dropdownOpen && (
+//                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow border">
+//                   <button
+//                     onClick={() => navigate("/employer/dashboard")}
+//                     className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100"
+//                   >
+//                     <Briefcase size={16} /> Dashboard
+//                   </button>
+
+//                   <button
+//                     onClick={() => navigate("/")}
+//                     className="flex items-center gap-2 w-full px-4 py-2 text-red-600 hover:bg-gray-100"
+//                   >
+//                     <LogOut size={16} /> Logout
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         </header>
+
+//         {/* ================= Content ================= */}
+//         <main className="pt-20 p-6 bg-graywhite min-h-screen">
+//           <Outlet />
+//         </main>
+//       </div>
+//     </div>
+//   );
+// }

@@ -74,7 +74,7 @@ export default function MyJobs() {
   // Navigate to job detail page
   const handleDetail = (id) =>
     navigate(`/employer/dashboard/my-jobs/${id}/detail`);
-// Navigate to job edit page
+  // Navigate to job edit page
   const handleEdit = (job) =>
     navigate(`/employer/dashboard/my-jobs/${job.id}/edit`);
 
@@ -128,9 +128,9 @@ export default function MyJobs() {
         <h1 className="text-lg font-semibold text-gray-700">Post Jobs</h1>
         <button
           onClick={() => navigate("/employer/dashboard/job-create")}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow"
+          className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
         >
-          + Create a Job
+          + Create New Job
         </button>
       </div>
 

@@ -1,17 +1,42 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import contact from "../assets/images/contact.jpg";
+import usePageTitle from "../hooks/usePageTitle";
 
-export default function ContactUs() {
+/* =========================
+   CSRF TOKEN HELPER
+========================= */
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+const ContactUs = ({ collapse }) => {
+
+  usePageTitle('Contact Us')
+
   const [formData, setFormData] = useState({
-    name: "",
+    full_name: "",
     email: "",
+    subject: "",
     phone: "",
     message: "",
   });
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,121 +45,208 @@ export default function ContactUs() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setSuccess("");
-    setError("");
+    setError(null);
+    setSuccess(null);
+
+    const csrftoken = getCookie("csrftoken");
 
     try {
       await axios.post(
         "http://127.0.0.1:8000/legal/api/contact-us/",
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken,
+          },
+          withCredentials: true,
+        }
       );
-      setSuccess("Message sent successfully!");
-      setFormData({ name: "", email: "", phone: "", message: "" });
+
+      setSuccess("Message sent successfully ✅");
+      setFormData({
+        full_name: "",
+        email: "",
+        subject: "",
+        phone: "",
+        message: "",
+      });
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      setError(err.response?.data || { error: "Something went wrong" });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-[#0b4a7d] min-h-screen py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-
-        {/* HERO TEXT */}
-        <div className="bg-white/60 rounded-xl p-6 mb-14 max-w-xl">
-          <h1 className="text-2xl font-semibold text-[#0b4a7d]">
-            Connect with Our Team
-          </h1>
-          <p className="text-gray-600 mt-1">
-            You can connect to your goals from our website.
-          </p>
+    <div className="w-full">
+      {/* ================= HERO ================= */}
+      <div
+        className={`relative bg-cover bg-center bg-no-repeat transition-all duration-500 overflow-hidden ${
+          collapse
+            ? "h-0 py-0 opacity-0"
+            : "h-[530px] max-2xl:h-[350px] max-xl:h-[320px] max-lg:h-[300px] py-8 opacity-100"
+        }`}
+        style={{
+          backgroundImage: `url(${contact})`,
+        }}
+      >
+        <div className="container mx-auto px-4 absolute mb-10 bottom-0 right-0 left-0">
+          <div className="border border-transparent rounded-2xl bg-white/20 backdrop-blur-md py-3 px-5 flex flex-col justify-center">
+            <h1 className="text-3xl text-darkblue">Connect with Our Team</h1>
+            <p className="text-darkblue/90">
+              You can connect to your goals from our website
+            </p>
+          </div>
         </div>
+      </div>
 
-        {/* CONTENT */}
-        <div className="flex flex-col md:flex-row gap-10">
+      {/* ================= CONTENT ================= */}
+      <div className="bg-white py-16">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10">
+          {/* ===== LEFT : FORM ===== */}
+          <div className="bg-darkblue/90 rounded-2xl shadow-lg p-8">
+            <h2 className="text-xl font-semibold mb-6 text-graywhite">
+              Get In Touch
+            </h2>
 
-          {/* FORM */}
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white rounded-xl p-8 w-full md:w-1/2"
-          >
-            <h2 className="text-xl font-semibold mb-6">Get In Touch</h2>
+            {/* ERROR */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
+                {Object.entries(error).map(([key, value]) => (
+                  <p key={key}>
+                    <strong>{key}:</strong>{" "}
+                    {Array.isArray(value) ? value[0] : value}
+                  </p>
+                ))}
+              </div>
+            )}
 
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+            {/* SUCCESS */}
+            {success && (
+              <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">
+                {success}
+              </div>
+            )}
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="full_name"
+                placeholder="Full Name"
+                value={formData.full_name}
+                onChange={handleChange}
+                required
+                className="w-full border border-yellowbutton rounded-lg px-4 py-3 text-graywhite focus:outline-none"
+              />
 
-            <input
-              type="text"
-              name="phone"
-              placeholder="Phone Number"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3 mb-4"
-            />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full border border-yellowbutton rounded-lg px-4 py-3 text-graywhite focus:outline-none"
+              />
 
-            <textarea
-              name="message"
-              placeholder="Your Message"
-              value={formData.message}
-              onChange={handleChange}
-              rows="4"
-              className="w-full border rounded-lg px-4 py-3 mb-4"
-              required
-            />
+              <select
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                className="w-full border border-yellowbutton rounded-lg px-4 py-3 text-graywhite bg-graywhite/10 focus:outline-none"
+              >
+                <option value="" className="bg-darkblue text-graywhite">
+                  Select Subject
+                </option>
+                <option value="general" className="bg-darkblue text-graywhite">
+                  General Inquiry
+                </option>
+                <option value="job" className="bg-darkblue text-graywhite">
+                  Job Related
+                </option>
+                <option value="employer" className="bg-darkblue text-graywhite">
+                  Employer Support
+                </option>
+                <option
+                  value="technical"
+                  className="bg-darkblue text-graywhite"
+                >
+                  Technical Issue
+                </option>
+                <option value="other" className="bg-darkblue text-graywhite">
+                  Other
+                </option>
+              </select>
 
-            <button
-              disabled={loading}
-              className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-medium"
-            >
-              {loading ? "Sending..." : "Send Message"}
-            </button>
+              <input
+                type="text"
+                name="phone"
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full border border-yellowbutton rounded-lg px-4 py-3 text-graywhite focus:outline-none"
+              />
 
-            {success && <p className="text-green-600 mt-3">{success}</p>}
-            {error && <p className="text-red-600 mt-3">{error}</p>}
-          </form>
+              <textarea
+                name="message"
+                placeholder="Your Message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="w-full border border-yellowbutton rounded-lg px-4 py-3 text-graywhite focus:outline-none"
+              />
 
-          {/* CONTACT INFO */}
-          <div className="w-full md:w-1/2 text-white">
-            <h2 className="text-xl font-semibold mb-2">Contact us</h2>
-            <p className="text-white/80 mb-6">
+              <button
+                type="submit"
+                disabled={loading}
+                className="max-md:h-[40px] max-xl:h-[48px] h-[55px] px-5 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
+              >
+                {loading ? "Sending..." : "Send Message"}
+              </button>
+            </form>
+          </div>
+
+          {/* ===== RIGHT : CONTACT INFO ===== */}
+          <div className="text-darkblue">
+            <h2 className="text-2xl font-semibold mb-3">Contact us</h2>
+            <p className="text-darkblue mb-6">
               You can contact us to find out the contents you want to know as
               soon as possible
             </p>
 
-            <InfoCard title="Address" value="Zi Za War 1 St." />
-            <InfoCard title="Mobile" value="+00 635847487" />
-            <InfoCard title="Email" value="Email123@gmail.com" />
-          </div>
+            <div className="space-y-4">
+              <div className="border border-yellowbutton rounded-xl p-5">
+                <p className="font-semibold flex gap-2 items-center">
+                  <FaMapMarkerAlt size={20} className="fill-darkblue" />{" "}
+                  <span className="text-darkblue">Address</span>
+                </p>
+                <p className="text-darkblue">Arakkha PaukTaw</p>
+              </div>
 
+              <div className="border border-yellowbutton rounded-xl p-5">
+                <p className="font-semibold flex gap-2 items-center">
+                  <FaPhoneAlt size={20} className="fill-darkblue" />{" "}
+                  <span className="text-darkblue">Mobile</span>
+                </p>
+                <p className="text-darkblue">+00 635847487</p>
+              </div>
+
+              <div className="border border-yellowbutton rounded-xl p-5">
+                <p className="font-semibold flex gap-2 items-center">
+                  <FaEnvelope size={20} className="fill-darkblue" />{" "}
+                  <span className="text-darkblue">Email</span>
+                </p>
+                <p className="text-darkblue">futter343@gmail.com</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
-function InfoCard({ title, value }) {
-  return (
-    <div className="border border-white/40 rounded-xl p-5 mb-4">
-      <p className="font-medium">{title}</p>
-      <p className="text-white/80">{value}</p>
-    </div>
-  );
-}
+export default ContactUs;
