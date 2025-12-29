@@ -99,8 +99,8 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-md">
-      <h2 className="text-xl font-bold mb-4">
+    <form onSubmit={handleSubmit} className="bg-white/30 p-6 rounded-2xl shadow-xl">
+      <h2 className="text-xl text-darkblue font-bold mb-4">
         {categoryId ? "Edit Category" : "Add Category"}
       </h2>
 
@@ -117,8 +117,8 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
           setCategoryName(e.target.value);
           setError("");
         }}
-        className={`border rounded-md px-4 py-2 w-full mb-4 ${
-          error ? "border-red-500" : "border-gray-300"
+        className={`border rounded-md px-4 py-2 w-full mb-4 text-darkblue focus:outline-none ${
+          error ? "border-red-500" : "border-yellowbutton"
         }`}
         placeholder="Category name"
       />
@@ -127,7 +127,7 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
       <button
         type="submit"
         disabled={loading}
-        className="bg-orange-600 text-white px-4 py-2 rounded-md"
+        className="bg-yellowbutton hover:bg-hoveryellowbutton text-darkblue hover:text-darkblue-hover transition duration-300 ease-in-out font-semibold px-8 py-2 rounded-xl cursor-pointer"
       >
         {loading ? "Saving..." : categoryId ? "Update" : "Add"}
       </button>
