@@ -109,7 +109,7 @@ export default function EmployerDashboardLayout() {
                 }}
                 end={item.route === "dashboard"}
                 className={({ isActive }) =>
-                  `flex items-center p-2 rounded transition ${
+                  `flex items-center p-2 rounded transition duration-300 ease-in-out ${
                     emailNotVerified
                       ? "opacity-40 cursor-not-allowed" // 🔒 Disabled UI
                       : isActive
@@ -258,7 +258,7 @@ export default function EmployerDashboardLayout() {
 //                 }`}
 //                 end={item.route === "dashboard"}
 //                 className={({ isActive }) =>
-//                   `flex items-center gap-3 px-3 py-2 rounded-lg transition
+//                   `flex items-center gap-3 px-3 py-2 rounded-lg transition duration-300 ease-in-out
 //                   ${
 //                     isActive
 //                       ? "bg-hoveryellowbutton/10 text-yellowbutton font-semibold"

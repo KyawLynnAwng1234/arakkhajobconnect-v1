@@ -4,7 +4,7 @@ import JobForm from "../../../components/employer/jobs/JobForm";
 
 export default function PostJob() {
   return (
-    <div className="px-6">
+    <div className="p-6">
       <JobForm />
     </div>
   );

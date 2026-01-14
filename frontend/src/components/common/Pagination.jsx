@@ -15,10 +15,10 @@ export default function Pagination({
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-3 py-1 rounded-md border 
+        className={`px-3 py-1 rounded-md border border-yellowbutton transition duration-300 ease-in-out 
           ${currentPage === 1
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 text-gray-700"
+            ? "bg-transparent text-darkblue/50 cursor-not-allowed"
+            : "bg-transparent hover:bg-yellowbutton text-darkblue cursor-pointer"
           }`}
       >
         Prev
@@ -33,10 +33,10 @@ export default function Pagination({
           <button
             key={i}
             onClick={() => onPageChange(page)}
-            className={`px-3 py-1 rounded-md border 
+            className={`px-3 py-1 rounded-md border border-yellowbutton cursor-pointer hover:text-darkblue-hover hover:bg-hoveryellowbutton 
               ${isActive
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-700 hover:bg-gray-100"
+                ? "bg-yellowbutton text-darkblue border-yellowbutton"
+                : "bg-transparent text-darkblue"
               }`}
           >
             {page}
@@ -48,10 +48,10 @@ export default function Pagination({
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-3 py-1 rounded-md border 
+        className={`px-3 py-1 rounded-md border border-yellowbutton transition duration-300 ease-in-out 
           ${currentPage === totalPages
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 text-gray-700"
+            ? "bg-transparent text-darkblue/50 cursor-not-allowed"
+            : "bg-transparent hover:bg-yellowbutton text-darkblue cursor-pointer"
           }`}
       >
         Next

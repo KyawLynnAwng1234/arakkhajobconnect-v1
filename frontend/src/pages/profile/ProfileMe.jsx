@@ -258,7 +258,6 @@ export default function ProfileMe() {
                 target="_blank"
                 className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-                🌐{profile.website || "Website"}
                 <CiGlobe /> {profile.website || "Website"}
               </a>
               <a
@@ -266,7 +265,6 @@ export default function ProfileMe() {
                 target="_blank"
                 className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-                💼 {profile.linkedin || "Linkedin"}
                 <FaLinkedin /> {profile.linkedin || "LinkedIn"}
               </a>
               <a
@@ -274,7 +272,6 @@ export default function ProfileMe() {
                 target="_blank"
                 className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-md rounded-full text-xs sm:text-sm hover:bg-white/30 transition flex items-center gap-1"
               >
-                🐙 {profile.github || "GitHub"}
                 <FaGithub /> {profile.github || "GitHub"}
               </a>
             </div>

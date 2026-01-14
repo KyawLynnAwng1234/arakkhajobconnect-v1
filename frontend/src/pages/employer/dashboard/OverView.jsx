@@ -121,8 +121,8 @@ export default function Overview() {
           </p>
         </div>
         <button
-          onClick={() => navigate("/employer/dashboard/job-create")}
-          className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
+          onClick={() => navigate("/employer/dashboard/my-jobs/job-create")}
+          className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition duration-300 ease-in-out shadow-md cursor-pointer"
         >
           + Create New Job
         </button>

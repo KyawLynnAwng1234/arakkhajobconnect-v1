@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from "../../common/Pagination";
 
-export default function JobCategoryList({ categories, onDelete, onDetail, onEdit, }) {
+export default function JobCategoryList({
+  categories,
+  onDelete,
+  onDetail,
+  onEdit,
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -30,19 +35,19 @@ export default function JobCategoryList({ categories, onDelete, onDetail, onEdit
               <div className="flex gap-3 text-sm">
                 <button
                   onClick={() => onDetail(cat.id)}
-                  className="text-blue-600 underline hover:no-underline"
+                  className="text-blue-600 underline hover:no-underline cursor-pointer"
                 >
                   Detail
                 </button>
                 <button
                   onClick={() => onEdit(cat.id)}
-                  className="text-green-600 underline hover:no-underline"
+                  className="text-green-600 underline hover:no-underline cursor-pointer"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => onDelete(cat.id)}
-                  className="text-red-600 underline hover:no-underline"
+                  className="text-red-600 underline hover:no-underline cursor-pointer"
                 >
                   Delete
                 </button>

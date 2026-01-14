@@ -80,192 +80,194 @@ export default function EmployerProfileEditPage() {
   };
 
   return (
-    <div className="flex items-center justify-center py-10">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-xl p-8 w-full max-w-5xl border border-gray-100"
-      >
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Edit Employer Profile
-        </h2>
+    <div className="p-6">
+      <div className="flex items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white/30 shadow-xl rounded-xl p-6 w-full"
+        >
+          <h2 className="text-xl text-darkblue font-bold text-center">
+            Edit Employer Profile
+          </h2>
 
-        {/* Logo preview */}
-        <div className="flex flex-col items-center mb-6">
-          {profile?.logo && (
-            <img
-              src={
-                profile.logo.startsWith("http")
-                  ? profile.logo
-                  : `${API_URL}${profile.logo}`
-              }
-              alt="Company Logo"
-              className="w-24 h-24 rounded-full object-cover mb-3 border shadow-sm"
-            />
-          )}
-          <label className="text-sm font-medium text-gray-700 mb-1">
-            Upload Company Logo
-          </label>
-          <input
-            type="file"
-            name="logo"
-            accept="image/*"
-            onChange={handleChange}
-            className="border border-gray-300 p-2 rounded w-64 text-sm file:mr-3 file:px-3 file:py-2 file:rounded-md file:border-0 file:bg-sky-600 file:text-white hover:file:bg-sky-700 cursor-pointer"
-          />
-        </div>
-
-        {/* Form Fields */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              First Name
+          {/* Logo preview */}
+          <div className="flex flex-col items-center py-6">
+            {profile?.logo && (
+              <img
+                src={
+                  profile.logo.startsWith("http")
+                    ? profile.logo
+                    : `${API_URL}${profile.logo}`
+                }
+                alt="Company Logo"
+                className="w-24 h-24 rounded-full object-cover mb-3 border shadow-sm"
+              />
+            )}
+            <label className="text-sm font-medium text-grayblack/60 mb-1">
+              Upload Company Logo
             </label>
             <input
-              type="text"
-              name="first_name"
-              value={formData.first_name}
+              type="file"
+              name="logo"
+              accept="image/*"
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
+              className="border border-grayblack/30 p-2 rounded w-64 text-sm file:mr-3 file:px-3 file:py-2 file:rounded-md file:border-0 file:bg-yellowbutton file:text-darkblue hover:file:bg-hoveryellowbutton hover:file:text-darkblue-hover cursor-pointer transition duration-300 ease-in-out"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Last Name
-            </label>
-            <input
-              type="text"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
+          {/* Form Fields */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-medium text-darkblue mb-1">
+                First Name
+              </label>
+              <input
+                type="text"
+                name="first_name"
+                value={formData.first_name}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="last_name"
+                value={formData.last_name}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block font-medium text-darkblue mb-1">
+                Company Name
+              </label>
+              <input
+                type="text"
+                name="business_name"
+                value={formData.business_name}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                City
+              </label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                Website
+              </label>
+              <input
+                type="text"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                placeholder="https://yourcompany.com"
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                Industry
+              </label>
+              <input
+                type="text"
+                name="industry"
+                value={formData.industry}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                Phone
+              </label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                Company Size
+              </label>
+              <input
+                type="text"
+                name="size"
+                value={formData.size}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                Founded Year
+              </label>
+              <input
+                type="number"
+                name="founded_year"
+                value={formData.founded_year}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-medium text-darkblue mb-1">
+                Contact Email
+              </label>
+              <input
+                type="email"
+                name="contact_email"
+                value={formData.contact_email}
+                onChange={handleChange}
+                className="w-full border border-grayblack/30 text-darkblue rounded-md p-2 focus:outline-none"
+              />
+            </div>
           </div>
 
-          <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Company Name
-            </label>
-            <input
-              type="text"
-              name="business_name"
-              value={formData.business_name}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
+          {/* Buttons */}
+          <div className="mt-8 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="px-5 py-2 border border-darkblue text-darkblue rounded-md hover:text-darkblue-hover transition duration-300 ease-in-out cursor-pointer"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="px-5 py-2 border border-transparent bg-yellowbutton text-darkblue font-medium rounded-md shadow hover:bg-hoveryellowbutton hover:text-darkblue-hover transition duration-300 ease-in-out cursor-pointer"
+            >
+              Save Changes
+            </button>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              City
-            </label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Website
-            </label>
-            <input
-              type="text"
-              name="website"
-              value={formData.website}
-              onChange={handleChange}
-              placeholder="https://yourcompany.com"
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Industry
-            </label>
-            <input
-              type="text"
-              name="industry"
-              value={formData.industry}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Phone
-            </label>
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Company Size
-            </label>
-            <input
-              type="text"
-              name="size"
-              value={formData.size}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Founded Year
-            </label>
-            <input
-              type="number"
-              name="founded_year"
-              value={formData.founded_year}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Contact Email
-            </label>
-            <input
-              type="email"
-              name="contact_email"
-              value={formData.contact_email}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Buttons */}
-        <div className="mt-8 flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="px-5 py-2 border border-sky-500 text-sky-600 rounded-md hover:bg-sky-50 transition"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            className="px-6 py-2 bg-gradient-to-r from-sky-600 to-blue-600 text-white font-medium rounded-md shadow hover:from-sky-700 hover:to-blue-700 transition"
-          >
-            Save Changes
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }

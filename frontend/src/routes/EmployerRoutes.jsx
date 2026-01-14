@@ -10,7 +10,6 @@ import PostJob from "../pages/employer/jobs-page/PostJob";
 import JobDetail from "../components/employer/jobs/JobDetail";
 
 import JobCategoryListPage from "../pages/employer/job-categories-page/JobCategoryListPage";
-import JobCategoryCreatePage from "../pages/employer/job-categories-page/JobCategoryCreatePage";
 
 import NotificationLists from "../pages/employer/dashboard/NotificationLists";
 
@@ -25,23 +24,28 @@ export const EmployerRoutes = (
     <Route index element={<Overview />} />
 
     {/* job */}
-    <Route path="my-jobs" element={<MyJobs />} />
-    <Route path="job-create" element={<PostJob />} />
-    <Route path="my-jobs/:id/edit" element={<EditJob />} />
-    <Route path="my-jobs/:id/detail" element={<JobDetail />} />
+    <Route path="my-jobs">
+      <Route index element={<MyJobs />} />
+      <Route path="job-create" element={<PostJob />} />
+      <Route path=":id/edit" element={<EditJob />} />
+      <Route path=":id/detail" element={<JobDetail />} />
+    </Route>
 
     {/* job-category */}
-    <Route path="job-category" element={<JobCategoryListPage />} />
-    <Route path="job-category/create" element={<JobCategoryCreatePage />} />
+      <Route path="job-category" element={<JobCategoryListPage />} />
 
     <Route path="notification-list" element={<NotificationLists />} />
 
     {/* Profile */}
-    <Route path="profile" element={<EmployerProfile />} />
-    <Route path="profile/edit" element={<EmployerProfileEditPage />} />
+    <Route path="profile">
+      <Route index element={<EmployerProfile />} />
+      <Route path="edit" element={<EmployerProfileEditPage />} />
+    </Route>
 
     {/* Application */}
-    <Route path="applications" element={<JobApplication />} />
-    <Route path="applications/:id" element={<JobApplicationProfileDetail />} />
+    <Route path="applications">
+      <Route index element={<JobApplication />} />
+      <Route path=":id" element={<JobApplicationProfileDetail />} />
+    </Route>
   </Route>
 );

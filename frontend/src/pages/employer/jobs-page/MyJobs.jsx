@@ -128,8 +128,8 @@ export default function MyJobs() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl text-darkblue font-bold">Post Jobs</h1>
           <button
-            onClick={() => navigate("/employer/dashboard/job-create")}
-            className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
+            onClick={() => navigate("/employer/dashboard/my-jobs/job-create")}
+            className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition duration-300 ease-in-out shadow-md cursor-pointer"
           >
             + Create New Job
           </button>
@@ -212,19 +212,19 @@ export default function MyJobs() {
                     <td className="p-3 space-x-3 text-sm">
                       <button
                         onClick={() => handleDetail(job.id)}
-                        className="text-blue-600 underline hover:no-underline"
+                        className="text-blue-600 underline hover:no-underline cursor-pointer"
                       >
                         Detail
                       </button>
                       <button
                         onClick={() => handleEdit(job)}
-                        className="text-green-600 underline hover:no-underline"
+                        className="text-green-600 underline hover:no-underline cursor-pointer"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => confirmDelete(job.id)}
-                        className="text-red-600 underline hover:no-underline"
+                        className="text-red-600 underline hover:no-underline cursor-pointer"
                       >
                         Delete
                       </button>
