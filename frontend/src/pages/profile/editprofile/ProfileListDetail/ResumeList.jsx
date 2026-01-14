@@ -106,78 +106,92 @@ export default function ResumeList({
       ) : (
         <ul className="space-y-4">
           {resumeList.map((resume) => {
-            const isImage =
-              resume.file &&
-              (resume.file.endsWith(".png") ||
-                resume.file.endsWith(".jpg") ||
-                resume.file.endsWith(".jpeg"));
+            const isImage = /\.(png|jpg|jpeg)$/i.test(resume.file || "");
+            const isPDF = /\.pdf$/i.test(resume.file || "");
 
             return (
               <li
                 key={resume.id}
-                className={`flex justify-between items-start border p-4 rounded-lg transition-all duration-200 gap-2 ${
+                className={`flex justify-between items-start border p-4 rounded-lg gap-4 ${
                   resume.is_default
                     ? "border-green-400 bg-green-50"
                     : "border-gray-200 hover:bg-gray-50"
                 }`}
               >
-                {/* Left side: preview + info */}
+                {/* LEFT */}
                 <div className="flex items-start gap-4">
-                  {isImage ? (
+                  {/* ===== THUMBNAIL ===== */}
+                  {isImage && (
                     <img
                       src={resume.file}
                       alt={resume.title}
-                      className="w-20 h-20 object-cover rounded-lg border cursor-pointer hover:opacity-80 transition"
-                      onClick={() => setPreview(resume.file)}
+                      className="w-20 h-24 object-cover rounded border cursor-pointer"
+                      onClick={() => window.open(resume.file, "_blank")}
                     />
-                  ) : (
+                  )}
+
+                  {isPDF && (
                     <div
-                      className="w-20 h-20 flex items-center justify-center border rounded-lg bg-gray-100 text-gray-500 cursor-pointer hover:bg-gray-200 transition"
+                      className="w-20 h-24 border rounded-lg bg-white flex items-center justify-center
+               cursor-pointer hover:shadow transition relative"
                       onClick={() => window.open(resume.file, "_blank")}
                     >
-                      <ImageIcon className="w-8 h-8" />
+                      {/* PDF Icon */}
+                      <svg
+                        className="w-10 h-10 text-red-500"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M6 2a2 2 0 0 0-2 2v16a2 
+      2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5L18.5 9H13V3.5z"
+                        />
+                      </svg>
+
+                      {/* PDF label overlay */}
+                      <span className="absolute bottom-1 text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded">
+                        PDF
+                      </span>
                     </div>
                   )}
 
-                  <div className="flex flex-col min-w-0 w-full">
-                    <div className="min-w-0 w-full">
-                      {/* TITLE */}
-                      <span
-                        className="font-medium text-gray-800 text-base break-words whitespace-pre-wrap min-w-0 w-full block
-      "
-                        style={{ wordBreak: "break-word" }}
-                      >
-                        {resume.title}
-                      </span>
+                  {/* ===== INFO ===== */}
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium text-gray-800">
+                      {resume.title}
+                    </span>
 
-                      {/* DEFAULT BADGE */}
+                    <div className="flex gap-2 flex-wrap">
                       {resume.is_default && (
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full whitespace-nowrap">
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
                           Default
+                        </span>
+                      )}
+
+                      {isPDF && (
+                        <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
+                          PDF
                         </span>
                       )}
                     </div>
 
-                    {/* VIEW FILE */}
-                    {!isImage && (
-                      <a
-                        href={resume.file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm underline mt-1"
-                      >
-                        <Eye className="w-4 h-4" />
-                        View File
-                      </a>
-                    )}
+                    <a
+                      href={resume.file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-blue-600 text-sm underline mt-1"
+                    >
+                      <Eye className="w-4 h-4" />
+                      View File
+                    </a>
                   </div>
                 </div>
 
-                {/* Right side: actions with icons */}
+                {/* RIGHT ACTIONS */}
                 <div className="flex flex-col gap-2 items-end">
                   <button
                     onClick={() => onEdit(resume)}
-                    className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
+                    className="text-blue-600 hover:text-blue-800"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
@@ -185,16 +199,15 @@ export default function ResumeList({
                   {!resume.is_default && (
                     <button
                       onClick={() => handleSetDefault(resume.id)}
-                      className="flex items-center gap-1 text-green-600 hover:text-green-800 text-sm font-medium"
+                      className="text-green-600 hover:text-green-800"
                     >
                       <Star className="w-4 h-4" />
-                      Set Default
                     </button>
                   )}
 
                   <button
                     onClick={() => handleDelete(resume.id)}
-                    className="flex items-center text-red-600 hover:text-red-800 text-sm font-medium"
+                    className="text-red-600 hover:text-red-800"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

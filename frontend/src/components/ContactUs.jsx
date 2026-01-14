@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
-import contact from "../assets/images/contact.jpg";
+import contactus from "../assets/images/contactus.jpg";
 import usePageTitle from "../hooks/usePageTitle";
 
 /* =========================
@@ -88,13 +88,13 @@ const ContactUs = ({ collapse }) => {
             : "h-[530px] max-2xl:h-[350px] max-xl:h-[320px] max-lg:h-[300px] py-8 opacity-100"
         }`}
         style={{
-          backgroundImage: `url(${contact})`,
+          backgroundImage: `url(${contactus})`,
         }}
       >
         <div className="container mx-auto px-4 absolute mb-10 bottom-0 right-0 left-0">
-          <div className="border border-transparent rounded-2xl bg-white/20 backdrop-blur-md py-3 px-5 flex flex-col justify-center">
+          <div className="border border-transparent rounded-2xl bg-white/90 backdrop-blur-md py-3 px-5 flex flex-col justify-center">
             <h1 className="text-3xl text-darkblue">Connect with Our Team</h1>
-            <p className="text-darkblue/90">
+            <p className="text-darkblue/70">
               You can connect to your goals from our website
             </p>
           </div>

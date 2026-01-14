@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function JobCategoryDeleteModal({ isOpen, onClose, onConfirm }) {
-   // Hide modal when not open
+  // Hide modal when not open
   if (!isOpen) return null;
 
   return (
@@ -10,7 +10,8 @@ export default function JobCategoryDeleteModal({ isOpen, onClose, onConfirm }) {
       <div className="border border-yellowbutton/50 p-6 rounded-xl shadow-lg w-96">
         <h2 className="text-xl font-bold mb-4 text-darkblue">Confirm Delete</h2>
         <p className="mb-6 text-darkblue">
-          Are you sure you want to delete this category? This action cannot be undone.
+          Are you sure you want to delete this category? This action cannot be
+          undone.
         </p>
 
         <div className="flex justify-end gap-4">

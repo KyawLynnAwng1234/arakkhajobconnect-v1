@@ -131,7 +131,8 @@ export default function JobForm({ jobId }) {
     if (!formData.location) newErrors.location = "Please select location";
     if (!formData.deadline) newErrors.deadline = "Please choose a deadline";
     if (!formData.salary) newErrors.salary = "Salary is required";
-    if (!formData.max_applicants) newErrors.max_applicants = "Max Applicants is required";
+    if (!formData.max_applicants)
+      newErrors.max_applicants = "Max Applicants is required";
     if (!formData.description.trim())
       newErrors.description = "Please add a job description";
 
@@ -213,36 +214,39 @@ export default function JobForm({ jobId }) {
   ];
 
   return (
-    <div>
+    <div className="p-6 bg-white/30 rounded-2xl shadow-xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-lg font-semibold text-gray-700">
+        <h1 className="text-xl text-darkblue font-bold">
           {jobId ? "Edit Job Post" : "Create Job Post"}
         </h1>
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-        >
-          {loading ? "Saving..." : jobId ? "Update Job" : "Add Job Post"}
-        </button>
+        {jobId && (
+          <button
+            onClick={() => navigate("/employer/dashboard/my-jobs/job-create")}
+            disabled={loading}
+            className="px-5 py-3 rounded-xl max-md:text-base text-lg
+        bg-yellowbutton text-darkblue font-semibold
+        hover:bg-hoveryellowbutton hover:text-darkblue-hover
+        transition duration-300 ease-in-out shadow-md cursor-pointer"
+          >
+            {loading ? "Saving..." : "+ Create New Job"}
+          </button>
+        )}
       </div>
 
       {/* FORM */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md p-6 rounded-lg space-y-6"
-      >
+      <form onSubmit={handleSubmit} className="py-3 space-y-6">
         {/* Title */}
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block font-medium">Job Title</label>
+            <label className="block font-medium text-darkblue">Job Title</label>
             <input
               type="text"
               name="title"
-              className="w-full border p-3 rounded-md"
+              className="w-full text-darkblue border border-grayblack/30 p-3 rounded-md focus:outline-none"
               value={formData.title}
               onChange={handleChange}
+              placeholder="Job Title"
             />
             {errors.title && (
               <p className="text-red-600 text-sm mt-1">{errors.title}</p>
@@ -250,16 +254,16 @@ export default function JobForm({ jobId }) {
           </div>
 
           <div>
-            <label className="block font-medium">Priority</label>
+            <label className="block font-medium text-darkblue">Priority</label>
             <select
               name="priority"
-              className="w-full border p-3 rounded-md"
+              className="w-full border border-grayblack/30 text-darkblue p-3 rounded-md focus:outline-none"
               value={formData.priority}
               onChange={handleChange}
             >
               <option value="">-- Select Priority --</option>
               {PRIORITY_CHOICES.map((p) => (
-                <option key={p.value} value={p.value}>
+                <option className="bg-graywhite" key={p.value} value={p.value}>
                   {p.label}
                 </option>
               ))}
@@ -273,16 +277,16 @@ export default function JobForm({ jobId }) {
         {/* Job Type + Category */}
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block font-medium">Job Type</label>
+            <label className="block font-medium text-darkblue">Job Type</label>
             <select
               name="job_type"
-              className="w-full border p-3 rounded-md"
+              className="w-full border border-grayblack/30 text-darkblue p-3 rounded-md focus:outline-none"
               value={formData.job_type}
               onChange={handleChange}
             >
               <option value="">-- Select Job Type --</option>
               {JOB_TYPE_CHOICES.map((j) => (
-                <option key={j.value} value={j.value}>
+                <option className="bg-graywhite" key={j.value} value={j.value}>
                   {j.label}
                 </option>
               ))}
@@ -293,16 +297,16 @@ export default function JobForm({ jobId }) {
           </div>
 
           <div>
-            <label className="block font-medium">Category</label>
+            <label className="block font-medium text-darkblue">Category</label>
             <select
               name="category"
-              className="w-full border p-3 rounded-md"
+              className="w-full border border-grayblack/30 text-darkblue p-3 rounded-md focus:outline-none"
               value={formData.category}
               onChange={handleChange}
             >
               <option value="">-- Select Category --</option>
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
+                <option className="bg-graywhite" key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
               ))}
@@ -316,16 +320,16 @@ export default function JobForm({ jobId }) {
         {/* Location + Salary */}
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block font-medium">Location</label>
+            <label className="block font-medium text-darkblue">Location</label>
             <select
               name="location"
-              className="w-full border p-3 rounded-md"
+              className="w-full border border-grayblack/30 text-darkblue p-3 rounded-md focus:outline-none"
               value={formData.location}
               onChange={handleChange}
             >
               <option value="">-- Select Location --</option>
               {LOCATION_CHOICES.map((l) => (
-                <option key={l.value} value={l.value}>
+                <option className="bg-graywhite" key={l.value} value={l.value}>
                   {l.label}
                 </option>
               ))}
@@ -336,13 +340,14 @@ export default function JobForm({ jobId }) {
           </div>
 
           <div>
-            <label className="block font-medium">Salary</label>
+            <label className="block font-medium text-darkblue">Salary</label>
             <input
               type="number"
               name="salary"
-              className="w-full border p-3 rounded-md"
+              className="w-full border border-grayblack/30 text-darkblue p-3 rounded-md focus:outline-none"
               value={formData.salary}
               onChange={handleChange}
+              placeholder="Salary ($100, etc...)"
             />
             {errors.salary && (
               <p className="text-red-600 text-sm mt-1">{errors.salary}</p>
@@ -353,25 +358,29 @@ export default function JobForm({ jobId }) {
         {/* Max applicants + Deadline */}
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block font-medium">Maximum Applicants</label>
+            <label className="block font-medium text-darkblue">
+              Maximum Applicants
+            </label>
             <input
               type="number"
               name="max_applicants"
-              className="w-full border p-3 rounded-md"
+              className="w-full border border-grayblack/30 text-darkblue p-3 rounded-md focus:outline-none"
               value={formData.max_applicants}
               onChange={handleChange}
             />
             {errors.max_applicants && (
-              <p className="text-red-600 text-sm mt-1">{errors.max_applicants}</p>
+              <p className="text-red-600 text-sm mt-1">
+                {errors.max_applicants}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block font-medium">Deadline</label>
+            <label className="block font-medium text-darkblue">Deadline</label>
             <input
               type="date"
               name="deadline"
-              className="w-full border p-3 rounded-md"
+              className="w-full border border-grayblack/30 text-darkblue p-3 rounded-md focus:outline-none"
               value={formData.deadline}
               onChange={handleChange}
             />
@@ -383,7 +392,9 @@ export default function JobForm({ jobId }) {
 
         {/* Description */}
         <div>
-          <label className="block font-medium">Job Description</label>
+          <label className="block font-medium text-darkblue">
+            Job Description
+          </label>
           <ReactQuill
             theme="snow"
             value={formData.description}
@@ -392,11 +403,12 @@ export default function JobForm({ jobId }) {
             }
             modules={quillModules}
             formats={quillFormats}
-            className="bg-white rounded-md border min-h-[200px]"
+            className="bg-transparent rounded-md border border-grayblack/30 text-darkblue min-h-[200px]"
+            placeholder="Job Description"
           />
           {errors.description && (
-              <p className="text-red-600 text-sm mt-1">{errors.description}</p>
-            )}
+            <p className="text-red-600 text-sm mt-1">{errors.description}</p>
+          )}
         </div>
 
         {/* Submit */}
@@ -404,7 +416,7 @@ export default function JobForm({ jobId }) {
           <button
             type="submit"
             disabled={loading}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-md"
+            className="px-5 py-3 rounded-xl max-md:text-base text-lg bg-yellowbutton text-darkblue font-semibold hover:bg-hoveryellowbutton hover:text-darkblue-hover transition shadow-md cursor-pointer"
           >
             {loading ? "Saving..." : jobId ? "Update Job" : "Create Job"}
           </button>

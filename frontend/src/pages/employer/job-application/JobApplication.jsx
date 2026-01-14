@@ -9,11 +9,11 @@ import {
   MoreVertical,
   Trash2,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Pagination from "../../../components/common/Pagination";
 
-// ✅ Get CSRF Token Helper
+// Get CSRF Token Helper
 export function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -30,6 +30,7 @@ export function getCookie(name) {
 }
 
 export default function JobApplication() {
+  const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [counts, setCounts] = useState({
     P: 0,
@@ -51,7 +52,7 @@ export default function JobApplication() {
 
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // ✅ Detect click outside dropdown
+  // Detect click outside dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -62,21 +63,20 @@ export default function JobApplication() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ Fetch All Applications (for default view)
+  // Fetch All Applications (for default view)
   const fetchApplications = async (endpoint = null) => {
     setLoading(true);
     try {
       const url = endpoint || `${API_URL}/application/employer/applications/`;
       const res = await axios.get(url, { withCredentials: true });
 
-      // API မှာ key မတူနိုင်တာကြောင့် dynamic key handle
       const data = res.data;
       const key = Object.keys(data).find((k) => k.endsWith("_apps"));
       const apps = key ? data[key] : data.applications || [];
 
       setApplications(apps);
 
-      // ✅ Count ကို API response အပေါ်မူတည်မဟုတ်ဘဲ Local မှတင်တွက်မယ်
+      //  Count
       const newCounts = {
         P: apps.filter((a) => a.status === "P").length,
         R: apps.filter((a) => a.status === "R").length,
@@ -97,7 +97,7 @@ export default function JobApplication() {
     fetchApplications();
   }, []);
 
-  // ✅ Cards config
+  // Cards config
   const cards = [
     {
       title: "Pending",
@@ -136,7 +136,7 @@ export default function JobApplication() {
     },
   ];
 
-  // ✅ Card click handler (list change only)
+  // Card click handler (list change only)
   const handleCardClick = async (card) => {
     setActiveStatus(card.title);
     try {
@@ -151,8 +151,8 @@ export default function JobApplication() {
     }
   };
 
-  // 
-  // ✅ Update status (with user-friendly error)
+  //
+  // Update status (with user-friendly error)
   const handleAction = async (newStatus, appId) => {
     const csrftoken = getCookie("csrftoken");
     setOpenMenuId(null);
@@ -218,8 +218,7 @@ export default function JobApplication() {
     }
   };
 
-
-  // ✅ Delete
+  // Delete
   const handleDelete = async (appId) => {
     if (!window.confirm("Are you sure you want to delete this application?"))
       return;
@@ -241,7 +240,49 @@ export default function JobApplication() {
     }
   };
 
-  // ✅ Search + Filter
+  const handleView = async (app) => {
+    const csrftoken = getCookie("csrftoken");
+
+    try {
+      // Only auto-change if Pending
+      if (app.status === "P") {
+        await axios.post(
+          `${API_URL}/application/applications/${app.id}/update-status/`,
+          { new_status: "R" },
+          {
+            headers: {
+              "X-CSRFToken": csrftoken,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+
+        // Update local UI immediately
+        setApplications((prev) =>
+          prev.map((a) =>
+            a.id === app.id
+              ? { ...a, status: "R", status_display: "Review" }
+              : a
+          )
+        );
+      }
+
+      // Navigate to detail page
+      navigate(`/employer/dashboard/applications/${app.id}`);
+    } catch (error) {
+      console.error("❌ Auto review failed:", error);
+
+      const msg =
+        error.response?.data?.error ||
+        error.response?.data?.message ||
+        "Unable to open application.";
+
+      toast.error(msg, { icon: "ℹ️" });
+    }
+  };
+
+  // Search + Filter
   const filteredApplications = applications.filter((app) => {
     const matchesSearch =
       app.job?.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -256,7 +297,7 @@ export default function JobApplication() {
     return matchesSearch && matchesStatus;
   });
 
-  // ⭐ Pagination logic
+  // Pagination logic
   const indexLast = currentPage * itemsPerPage;
   const indexFirst = indexLast - itemsPerPage;
   const currentItems = filteredApplications.slice(indexFirst, indexLast);
@@ -265,154 +306,159 @@ export default function JobApplication() {
 
   const toggleMenu = (id) => setOpenMenuId(openMenuId === id ? null : id);
 
-  // ✅ Render UI
+  // Render UI
   return (
-    <div className="bg-[#e9f3fb] min-h-screen p-6 relative">
-      <h2 className="text-xl font-semibold text-gray-700 mb-4">
-        Job Applications{" "}
-        <span className="text-sm text-gray-500">({activeStatus})</span>
-      </h2>
+    <div className="p-6">
+      <div className="bg-white/30 p-6 relative">
+        <h2 className="text-xl text-darkblue font-bold">
+          Job Applications{" "}
+          <span className="text-sm text-darkblue">({activeStatus})</span>
+        </h2>
 
-      {/* ===== Summary Cards ===== */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-        {cards.map((card, i) => (
-          <button
-            key={i}
-            onClick={() => handleCardClick(card)}
-            className={`bg-white shadow-sm p-4 rounded-xl flex flex-col items-center justify-center text-center border border-gray-100 hover:shadow-md hover:scale-[1.02] transition-all ${activeStatus === card.title ? "ring-2 ring-blue-300" : ""
+        {/* ===== Summary Cards ===== */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 my-6">
+          {cards.map((card, i) => (
+            <button
+              key={i}
+              onClick={() => handleCardClick(card)}
+              className={`bg-graywhite shadow-sm p-4 rounded-xl flex flex-col items-center justify-center text-center border border-darkblue/10 hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer ${
+                activeStatus === card.title ? "ring-2 ring-darkblue/20" : ""
               }`}
-          >
-            <div className={`${card.color} mb-2`}>{card.icon}</div>
-            <p className={`${card.color} text-sm font-medium`}>{card.title}</p>
-            <p className="text-2xl font-bold text-gray-700">{card.value}</p>
-          </button>
-        ))}
-      </div>
-
-      {/* ===== Search & Filter ===== */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-3 mb-5">
-        <input
-          type="text"
-          placeholder="🔍 Search"
-          className="w-full md:w-1/2 border border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-200 focus:outline-none bg-white"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-full md:w-40 border border-gray-200 rounded-xl px-4 py-2 bg-white focus:ring-2 focus:ring-blue-200 focus:outline-none text-gray-600"
-        >
-          <option value="All">All Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Review">Reviewed</option>
-          <option value="Rejected">Rejected</option>
-          <option value="Shortlist">Shortlist</option>
-          <option value="Hired">Hired</option>
-        </select>
-      </div>
-
-      {/* ===== Table ===== */}
-      <div className="bg-white shadow-sm rounded-xl border border-gray-100 relative overflow-visible">
-        <div className="p-4 border-b border-gray-100">
-          <h3 className="text-gray-700 font-semibold text-base">
-            Job Applications Information
-          </h3>
+            >
+              <div className={`${card.color} mb-2`}>{card.icon}</div>
+              <p className={`${card.color} text-sm font-medium`}>
+                {card.title}
+              </p>
+              <p className="text-2xl font-bold text-grayblack">{card.value}</p>
+            </button>
+          ))}
         </div>
 
-        {loading ? (
-          <p className="text-center py-8 text-gray-500">Loading...</p>
-        ) : filteredApplications.length === 0 ? (
-          <p className="text-center py-8 text-gray-500">
-            No applications found.
-          </p>
-        ) : (
-          <table className="w-full text-left relative">
-            <thead className="bg-[#f9fafc] text-gray-600">
-              <tr>
-                <th className="py-3 px-4 text-sm font-semibold">No</th>
-                <th className="py-3 px-4 text-sm font-semibold">Name</th>
-                <th className="py-3 px-4 text-sm font-semibold">Email</th>
-                <th className="py-3 px-4 text-sm font-semibold">Job Title</th>
-                <th className="py-3 px-4 text-sm font-semibold">Status</th>
-                <th className="py-3 px-4 text-sm font-semibold">Date</th>
-                <th className="py-3 px-4 text-sm font-semibold">Action</th>
-              </tr>
-            </thead>
-            <tbody ref={menuRef}>
-              {currentItems.map((app, i) => (
-                <tr
-                  key={app.id}
-                  className="border-t border-gray-100 text-gray-700 hover:bg-gray-50 transition relative"
-                >
-                  <td className="py-3 px-4 text-sm">{i + 1}</td>
-                  <td className="py-3 px-4 text-sm">
-                    {app.jobseeker_name || "N/A"}
-                  </td>
-                  <td className="py-3 px-4 text-sm">
-                    {app.jobseeker_email || "N/A"}
-                  </td>
-                  <td className="py-3 px-4 text-sm">{app.job?.title}</td>
-                  <td className="py-3 px-4 text-sm">{app.status_display}</td>
-                  <td className="py-3 px-4 text-sm">
-                    {new Date(app.applied_at).toLocaleDateString()}
-                  </td>
+        {/* ===== Search & Filter ===== */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 m-8">
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-full md:w-1/2 border border-grayblack/30 text-darkblue rounded-xl px-4 py-2 focus:outline-none bg-transparent"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-full md:w-40 border border-grayblack/30 rounded-xl px-4 py-2 bg-transparent focus:ring-2 focus:ring-blue-200 focus:outline-none text-darkblue"
+          >
+            <option value="All">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Review">Reviewed</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Shortlist">Shortlist</option>
+            <option value="Hired">Hired</option>
+          </select>
+        </div>
 
-                  {/* Action */}
-                  <td className="py-3 px-4 text-sm relative">
-                    <div className="flex items-center gap-3">
-                      <Link
-                        to={`/employer/dashboard/applications/${app.id}`}
-                        className="text-blue-500 hover:text-blue-700 flex items-center gap-1 hover:underline"
-                      >
-                        <Eye size={16} /> View
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(app.id)}
-                        className="text-red-500 hover:text-red-700 flex items-center gap-1 hover:underline"
-                      >
-                        <Trash2 size={16} /> Delete
-                      </button>
-                      <button
-                        className="text-gray-500 hover:text-gray-700"
-                        onClick={() => toggleMenu(app.id)}
-                      >
-                        <MoreVertical size={18} />
-                      </button>
-                    </div>
+        {/* ===== Table ===== */}
+        <div className="relative overflow-visible">
+          <div className="p-4 border-b border-grayblack/30">
+            <h3 className="text-darkblue font-semibold text-lg">
+              Job Applications Information
+            </h3>
+          </div>
 
-                    {/* Dropdown */}
-                    {openMenuId === app.id && (
-                      <div className="absolute right-10 top-8 bg-white border border-gray-200 rounded-lg shadow-lg w-32 z-50">
-                        {[
-                          "Pending",
-                          "Review",
-                          "Rejected",
-                          "Shortlist",
-                          "Hired",
-                        ].map((option) => (
-                          <button
-                            key={option}
-                            onClick={() => handleAction(option, app.id)}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
-                          >
-                            {option}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </td>
+          {loading ? (
+            <p className="text-center py-8 text-grayblack/50">Loading...</p>
+          ) : filteredApplications.length === 0 ? (
+            <p className="text-center py-8 text-grayblack/50">
+              No applications found.
+            </p>
+          ) : (
+            <table className="w-full text-left relative bg-graywhite">
+              <thead className="bg-white/30 text-grayblack/90">
+                <tr className="text-darkblue">
+                  <th className="py-3 px-4 text-sm font-semibold">No</th>
+                  <th className="py-3 px-4 text-sm font-semibold">Name</th>
+                  <th className="py-3 px-4 text-sm font-semibold">Email</th>
+                  <th className="py-3 px-4 text-sm font-semibold">Job Title</th>
+                  <th className="py-3 px-4 text-sm font-semibold">Status</th>
+                  <th className="py-3 px-4 text-sm font-semibold">Date</th>
+                  <th className="py-3 px-4 text-sm font-semibold">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody ref={menuRef}>
+                {currentItems.map((app, i) => (
+                  <tr
+                    key={app.id}
+                    className="border-t border-gray-100 text-gray-700 hover:bg-gray-50 transition relative"
+                  >
+                    <td className="py-3 px-4 text-sm">{i + 1}</td>
+                    <td className="py-3 px-4 text-sm">
+                      {app.jobseeker_name || "N/A"}
+                    </td>
+                    <td className="py-3 px-4 text-sm">
+                      {app.jobseeker_email || "N/A"}
+                    </td>
+                    <td className="py-3 px-4 text-sm">{app.job?.title}</td>
+                    <td className="py-3 px-4 text-sm">{app.status_display}</td>
+                    <td className="py-3 px-4 text-sm">
+                      {new Date(app.applied_at).toLocaleDateString()}
+                    </td>
+
+                    {/* Action */}
+                    <td className="py-3 px-4 text-sm relative">
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => handleView(app)}
+                          className="text-blue-500 hover:text-blue-700 flex items-center gap-1 hover:underline cursor-pointer"
+                        >
+                          <Eye size={16} /> View
+                        </button>
+                        <button
+                          onClick={() => handleDelete(app.id)}
+                          className="text-red-500 hover:text-red-700 flex items-center gap-1 hover:underline cursor-pointer"
+                        >
+                          <Trash2 size={16} /> Delete
+                        </button>
+                        <button
+                          className="text-gray-500 hover:text-gray-700"
+                          onClick={() => toggleMenu(app.id)}
+                        >
+                          <MoreVertical size={18} />
+                        </button>
+                      </div>
+
+                      {/* Dropdown */}
+                      {openMenuId === app.id && (
+                        <div className="absolute right-10 top-8 bg-white border border-gray-200 rounded-lg shadow-lg w-32 z-50">
+                          {[
+                            "Pending",
+                            "Review",
+                            "Rejected",
+                            "Shortlist",
+                            "Hired",
+                          ].map((option) => (
+                            <button
+                              key={option}
+                              onClick={() => handleAction(option, app.id)}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50"
+                            >
+                              {option}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={(page) => setCurrentPage(page)}
-      />
     </div>
   );
 }

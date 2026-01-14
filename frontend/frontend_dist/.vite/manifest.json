@@ -1,16 +1,17 @@
 {
   "index.html": {
-    "file": "assets/index-DmT5Ii9G.js",
+    "file": "assets/index-BbgrStxU.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
-      "assets/index-QXoPaDg3.css"
+      "assets/index-BsmlvAT4.css"
     ],
     "assets": [
       "assets/logo-BYZ73V04.png",
       "assets/jobseekerphoto-EmQGLt-7.jpg",
-      "assets/contact-BbaiUhrF.jpg",
+      "assets/aboutus-2VGOvGzJ.jpg",
+      "assets/contactus-CbtWiX9N.jpg",
       "assets/signphoto-fwmAALqO.png",
       "assets/ajax-loader-BcnMEykj.gif",
       "assets/slick-BlzDm7g2.svg",
@@ -25,9 +26,13 @@
     "file": "assets/slick-BlzDm7g2.svg",
     "src": "node_modules/slick-carousel/slick/fonts/slick.svg"
   },
-  "src/assets/images/contact.jpg": {
-    "file": "assets/contact-BbaiUhrF.jpg",
-    "src": "src/assets/images/contact.jpg"
+  "src/assets/images/aboutus.jpg": {
+    "file": "assets/aboutus-2VGOvGzJ.jpg",
+    "src": "src/assets/images/aboutus.jpg"
+  },
+  "src/assets/images/contactus.jpg": {
+    "file": "assets/contactus-CbtWiX9N.jpg",
+    "src": "src/assets/images/contactus.jpg"
   },
   "src/assets/images/icon.png": {
     "file": "assets/icon-BDpIAbc1.png",

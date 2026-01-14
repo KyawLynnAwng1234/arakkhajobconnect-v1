@@ -208,229 +208,229 @@ export default function EmployerProfilePage() {
     {
       label: "Email",
       value: email,
-      icon: <Mail className="w-5 h-5 text-blue-500" />,
+      icon: <Mail className="w-5 h-5 text-darkblue" />,
     },
     {
       label: "Founded Year",
       value: profile.founded_year,
-      icon: <Calendar className="w-5 h-5 text-indigo-500" />,
+      icon: <Calendar className="w-5 h-5 text-darkblue" />,
     },
     {
       label: "Industry",
       value: profile.industry,
-      icon: <Building2 className="w-5 h-5 text-purple-500" />,
+      icon: <Building2 className="w-5 h-5 text-darkblue" />,
     },
     {
       label: "Company Name",
       value: profile.business_name,
-      icon: <Building2 className="w-5 h-5 text-gray-700" />,
+      icon: <Building2 className="w-5 h-5 text-darkblue" />,
     },
     {
       label: "Phone",
       value: profile.phone,
-      icon: <Phone className="w-5 h-5 text-teal-500" />,
+      icon: <Phone className="w-5 h-5 text-darkblue" />,
     },
     {
       label: "City",
       value: profile.city,
-      icon: <MapPin className="w-5 h-5 text-red-500" />,
+      icon: <MapPin className="w-5 h-5 text-darkblue" />,
     },
     {
       label: "Company Size",
       value: profile.size,
-      icon: <Users className="w-5 h-5 text-orange-500" />,
+      icon: <Users className="w-5 h-5 text-darkblue" />,
     },
     {
       label: "Contact Email",
       value: profile.contact_email,
-      icon: <AtSign className="w-5 h-5 text-pink-500" />,
+      icon: <AtSign className="w-5 h-5 text-darkblue" />,
     },
   ];
 
   return (
-    <div className="bg-white flex justify-center items-start py-10">
-      <main className="w-full p-6">
-        <h1 className="text-xl sm:text-2xl font-semibold mb-6 gray-text-custom">
-          Employer Profile
-        </h1>
+    <div className="p-6">
+      <div className="bg-white/30 flex justify-center items-start">
+        <main className="w-full p-6">
+          <h1 className="text-xl text-darkblue font-bold">Employer Profile</h1>
 
-        <section className="relative rounded-xl shadow-md p-6">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            {/* Avatar */}
-            <div
-              className="relative w-28 h-28 flex items-center justify-center"
-              onClick={handleAvatarClick}
-            >
+          <section className="relative">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6 py-6">
+              {/* Avatar */}
               <div
-                className="w-28 h-28 rounded-full flex items-center justify-center text-white text-3xl font-bold cursor-pointer hover:opacity-90 transition shadow-md border border-gray-200"
-                style={{
-                  backgroundColor: profile?.logo ? "transparent" : "#3b82f6",
-                }}
+                className="relative w-28 h-28 flex items-center justify-center"
+                onClick={handleAvatarClick}
               >
-                {profile?.logo ? (
-                  <img
-                    src={`${API_URL}${profile.logo}`}
-                    alt={profile.first_name || "Avatar"}
-                    className="w-28 h-28 rounded-full object-cover"
-                  />
-                ) : (
-                  profile?.first_name?.charAt(0).toUpperCase() || "U"
-                )}
-              </div>
-
-              {showUploadButton && (
-                <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 animate-fadeIn">
-                  <button
-                    onClick={handleUploadClick}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow-md hover:bg-blue-700 transition"
-                  >
-                    📤 Upload Photo
-                  </button>
-                </div>
-              )}
-
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-            </div>
-
-            {/* Info Section */}
-            <div className="flex-1 w-full">
-              <h2 className="text-2xl font-semibold text-gray-800">
-                {profile.first_name} {profile.last_name}
-              </h2>
-              <p className="text-base text-gray-500 mt-1">
-                Website:{" "}
-                <a
-                  href={profile.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
+                <div
+                  className="w-28 h-28 rounded-full flex items-center justify-center text-white text-3xl font-bold cursor-pointer hover:opacity-90 transition shadow-md border border-gray-200"
+                  style={{
+                    backgroundColor: profile?.logo ? "transparent" : "#3b82f6",
+                  }}
                 >
-                  {profile.website || "N/A"}
-                </a>
-              </p>
-
-              <hr className="my-5" />
-
-              {/* Info Fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {profileFields.map((f, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 text-gray-700"
-                  >
-                    {f.icon}
-                    <span className="font-medium">{f.label}:</span>
-                    <span className="text-base">{f.value ?? "N/A"}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Description */}
-              <div className="mt-12">
-                <h3 className="flex items-center justify-between gap-2 text-lg font-semibold text-gray-800 mb-2">
-                  <span className="flex items-center gap-2">
-                    <AlignLeft className="w-5 h-5 text-blue-600" />
-                    Company Description
-                  </span>
-
-                  {!editMode && (
-                    <button
-                      onClick={() => {
-                        setEditMode(true);
-                        setDescription(profile.description || "");
-                      }}
-                      className="gray-text-custom hover-blue cursor-pointer"
-                    >
-                      <Edit size={26} />
-                    </button>
-                  )}
-                </h3>
-
-                {/* employer edit mode */}
-                {editMode ? (
-                  <div className="space-y-3">
-                    <ReactQuill
-                      theme="snow"
-                      value={description}
-                      onChange={setDescription}
-                      modules={quillModules}
-                      formats={quillFormats}
-                      placeholder="Write detailed company description..."
-                      className="bg-white rounded-lg border border-gray-300 min-h-[200px] mb-10"
+                  {profile?.logo ? (
+                    <img
+                      src={`${API_URL}${profile.logo}`}
+                      alt={profile.first_name || "Avatar"}
+                      className="w-28 h-28 rounded-full object-cover"
                     />
-                    <div className="flex gap-3">
-                      {/* save button */}
-                      <button
-                        onClick={handleDescriptionSave}
-                        className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition"
-                      >
-                        Save
-                      </button>
-                      {/* cancle button */}
-                      <button
-                        onClick={() => setEditMode(false)}
-                        className="px-4 py-2 border border-gray-400 text-gray-600 text-sm rounded-md hover:bg-gray-100 transition"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-gray-700 leading-relaxed border rounded-md p-4 bg-gray-50 prose max-w-none">
-                    {expanded ? (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            profile.description ||
-                            "<p>No description provided.</p>",
-                        }}
-                      />
-                    ) : (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: truncateHTML(
-                            profile.description ||
-                              "<p>No description provided.</p>",
-                            300
-                          ),
-                        }}
-                      />
-                    )}
+                  ) : (
+                    profile?.first_name?.charAt(0).toUpperCase() || "U"
+                  )}
+                </div>
 
-                    {shouldTruncate && (
-                      // see less and see more button
-                      <button
-                        onClick={() => setExpanded(!expanded)}
-                        className="text-blue-600 text-sm mt-2 hover:underline"
-                      >
-                        {expanded ? "See Less" : "See More"}
-                      </button>
-                    )}
+                {showUploadButton && (
+                  <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 animate-fadeIn">
+                    <button
+                      onClick={handleUploadClick}
+                      className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg shadow-md hover:bg-blue-700 transition"
+                    >
+                      📤 Upload Photo
+                    </button>
                   </div>
                 )}
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </div>
+
+              {/* Info Section */}
+              <div className="flex-1 w-full">
+                <h2 className="text-lg font-semibold text-grayblack">
+                  {profile.first_name} {profile.last_name}
+                </h2>
+                <p className="text-base text-grayblack/70 mt-1">
+                  Website:{" "}
+                  <a
+                    href={profile.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-darkblue hover:underline"
+                  >
+                    {profile.website || "N/A"}
+                  </a>
+                </p>
+
+                <hr className="my-5 text-yellowbutton" />
+
+                {/* Info Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {profileFields.map((f, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-2 text-grayblack/70"
+                    >
+                      {f.icon}
+                      <span className="font-medium">{f.label}:</span>
+                      <span className="text-base">{f.value ?? "N/A"}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Description */}
+                <div className="mt-12">
+                  <h3 className="flex items-center justify-between gap-2 text-lg font-semibold text-darkblue mb-2">
+                    <span className="flex items-center gap-2">
+                      <AlignLeft className="w-5 h-5 text-darkblue" />
+                      Company Description
+                    </span>
+
+                    {!editMode && (
+                      <button
+                        onClick={() => {
+                          setEditMode(true);
+                          setDescription(profile.description || "");
+                        }}
+                        className="text-darkblue hover:text-darkblue-hover cursor-pointer"
+                      >
+                        <Edit size={26} />
+                      </button>
+                    )}
+                  </h3>
+
+                  {/* employer edit mode */}
+                  {editMode ? (
+                    <div className="space-y-3">
+                      <ReactQuill
+                        theme="snow"
+                        value={description}
+                        onChange={setDescription}
+                        modules={quillModules}
+                        formats={quillFormats}
+                        placeholder="Write detailed company description..."
+                        className="bg-transparent rounded-lg border border-yellowbutton min-h-[200px] mb-10"
+                      />
+                      <div className="flex gap-3">
+                        {/* save button */}
+                        <button
+                          onClick={handleDescriptionSave}
+                          className="px-4 py-2 border border-yellowbutton bg-yellowbutton text-darkblue hover:text-darkblue-hover text-sm rounded-md hover:bg-hoveryellowbutton transition duration-300 ease-in-out cursor-pointer"
+                        >
+                          Save
+                        </button>
+                        {/* cancle button */}
+                        <button
+                          onClick={() => setEditMode(false)}
+                          className="px-4 py-2 border border-darkblue text-darkblue text-sm rounded-md hover:text-darkblue-hover transition duration-300 ease-in-out cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-grayblack/70 leading-relaxed border border-yellowbutton rounded-md p-4 bg-transparent max-w-none">
+                      {expanded ? (
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              profile.description ||
+                              "<p>No description provided.</p>",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: truncateHTML(
+                              profile.description ||
+                                "<p>No description provided.</p>",
+                              300
+                            ),
+                          }}
+                        />
+                      )}
+
+                      {shouldTruncate && (
+                        // see less and see more button
+                        <button
+                          onClick={() => setExpanded(!expanded)}
+                          className="text-darkblue text-sm mt-2 hover:underline"
+                        >
+                          {expanded ? "▲ See Less" : "▼ See More "}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Edit Icon */}
-          <div
-            onClick={() =>
-              navigate("/employer/dashboard/profile/edit", {
-                state: { profile: { ...profile, id: profile.id } },
-              })
-            }
-            className="absolute top-4 right-4 gray-text-custom hover-blue cursor-pointer"
-          >
-            <Edit size={26} />
-          </div>
-        </section>
-      </main>
+            {/* Edit Icon */}
+            <div
+              onClick={() =>
+                navigate("/employer/dashboard/profile/edit", {
+                  state: { profile: { ...profile, id: profile.id } },
+                })
+              }
+              className="absolute top-4 right-4 text-darkblue hover:text-darkblue-hover cursor-pointer"
+            >
+              <Edit size={26} />
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
   );
 }
