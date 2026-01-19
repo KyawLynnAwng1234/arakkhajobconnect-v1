@@ -18,3 +18,7 @@ http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/jobseekerprofile_id/
 
 http://127.0.0.1:8000/accounts-jobseeker/resume/
 
+http://127.0.0.1:8000/accounts-jobseeker/jobseeker/signin/jobseeker/
+http://127.0.0.1:8000/accounts-jobseeker/jobseeker/send/otp/
+
+

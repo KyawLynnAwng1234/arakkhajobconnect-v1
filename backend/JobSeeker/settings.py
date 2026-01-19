@@ -75,11 +75,6 @@ INSTALLED_APPS = [
     'UI',
     'legal',
     
-    # Allauth
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
 
     #third party apps
     'rest_framework',
@@ -99,7 +94,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
@@ -150,7 +144,7 @@ if ENVIRONMENT == "local":
 else:  # production (Render + Aiven)
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.mysql",  # or postgresql
+            "ENGINE": "django.db.backends.mysql",
             "NAME": config("DB_NAME"),
             "USER": config("DB_USER"),
             "PASSWORD": config("DB_PASSWORD"),
@@ -217,27 +211,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-
-#contine with google
-SOCIALACCOUNT_PROVIDERS = {
-        'google': {
-            'APP': {
-                'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-                'secret':   os.getenv('GOOGLE_SECRET'),
-                'key': ''  # Usually not required for OAuth2 providers
-            },
-            'SCOPE': [
-                'profile',
-                'email',
-            ],
-            'AUTH_PARAMS': {
-                'access_type': 'online',
-                'prompt': 'select_account'
-            }
-        }
-    }
-
-
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
@@ -261,14 +234,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.130.155:5173",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "https://*.railway.app",
+    
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://192.168.130.155:5173",
-    "https://*.railway.app",
+    
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -276,11 +249,25 @@ USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 BACKEND_URL = "http://127.0.0.1:8000"
 
-
-
-
-
-
 #Meaida files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+#OAuth
+
+GOOGLE_CLIENT_ID = config("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = config("GOOGLE_CLIENT_SECRET")
+
+GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/auth/google/callback/"
+
+FRONTEND_SUCCESS_URL = config(
+    "FRONTEND_SUCCESS_URL",
+    default="http://127.0.0.1:8000/job-search"
+)
+
+FRONTEND_ERROR_URL = config(
+    "FRONTEND_ERROR_URL",
+    default="http://127.0.0.1:8000/sign-in"
+)
+
+
