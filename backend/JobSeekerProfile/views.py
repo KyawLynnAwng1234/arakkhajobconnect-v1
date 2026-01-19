@@ -218,6 +218,7 @@ def sigout_jobseeker(request):
 
     
 @api_view(['GET'])
+
 @permission_classes([IsAuthenticated])
 def current_user(request):
     u = request.user
