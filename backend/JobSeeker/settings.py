@@ -15,10 +15,7 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+ENVIRONMENT = config("ENVIRONMENT", default="local")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
@@ -142,13 +139,29 @@ WSGI_APPLICATION = 'JobSeeker.wsgi.application'
 
 
 # Use SQLite locally if DATABASE_URL is not set
-
-DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+if ENVIRONMENT == "local":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
+
+else:  # production (Render + Aiven)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",  # or postgresql
+            "NAME": config("DB_NAME"),
+            "USER": config("DB_USER"),
+            "PASSWORD": config("DB_PASSWORD"),
+            "HOST": config("DB_HOST"),
+            "PORT": config("DB_PORT", cast=int),
+            "OPTIONS": {
+                "ssl": {"ca": config("DB_SSL_CA", default=None)}
+            },
+        }
+    }
+
 
 # Optional but recommended:
 TIME_ZONE = "Asia/Yangon"

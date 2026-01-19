@@ -13,17 +13,21 @@ def parse_user_agent(request):
     ua_string = request.META.get("HTTP_USER_AGENT", "") or ""
     ua = parse(ua_string)
 
-    device = ua.device.family or "Unknown device"
-    os = (f"{ua.os.family} {ua.os.version_string}").strip() or "Unknown OS"
-    browser = (f"{ua.browser.family} {ua.browser.version_string}").strip() or "Unknown browser"
+    # Build friendly device label
+    device_type = "Mobile" if ua.is_mobile else "Tablet" if ua.is_tablet else "Desktop"
+    os = f"{ua.os.family} {ua.os.version_string}".strip() or "Unknown OS"
+    browser = f"{ua.browser.family} {ua.browser.version_string}".strip() or "Unknown Browser"
+
+    device_label = f"{device_type} • {os} • {browser}"
 
     return {
-        "device": device,
+        "device": device_label,
         "os": os,
         "browser": browser,
         "raw": ua_string,
         "is_bot": ua.is_bot,
     }
+
 
 
 def generate_fingerprint(ua_string, ip=None):
